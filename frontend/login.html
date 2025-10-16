@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="avatar-placeholder">
+                <img src="assets/img/Male_3.png" alt="Avatar de usuario">
+            </div>
+
+            <h2>Inicio de Sesión</h2>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="loginUsername" placeholder="Usuario" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                </div>
+                <div class="form-options">
+                    <label>
+                        <input type="checkbox"> Recordar mi usuario
+                    </label>
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                </div>
+                <button type="submit" class="btn btn-primary">Acceder</button>
+            </form>
+            <p class="signup-link">¿No tienes una cuenta? <a href="register.html">Regístrate</a></p>
+            <div id="loginMessage" class="message"></div>
+        </div>
+    </div>
+    <script src="assets/js/login.js"></script>
+</body>
+</html>

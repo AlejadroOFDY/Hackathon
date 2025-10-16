@@ -1,0 +1,143 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const registerForm = document.getElementById('registerForm');
+    const registerUsernameInput = document.getElementById('registerUsername');
+    const registerEmailInput = document.getElementById('registerEmail');
+    const registerPasswordInput = document.getElementById('registerPassword');
+    const registerRepeatPasswordInput = document.getElementById('registerRepeatPassword');
+    const registerFirstNameInput = document.getElementById('registerFirstName');
+    const registerLastNameInput = document.getElementById('registerLastName');
+    const registerEstablishmentLocationInput = document.getElementById('registerEstablishmentLocation');
+    const registerLatitudeInput = document.getElementById('registerLatitude');
+    const registerLongitudeInput = document.getElementById('registerLongitude');
+    const registerMessageDiv = document.getElementById('registerMessage');
+    const selectAvatarBtn = document.getElementById('selectAvatarBtn');
+    const avatarOptionsDiv = document.getElementById('avatarOptions');
+    const registerAvatarPreview = document.getElementById('registerAvatarPreview');
+
+    // >>>>> CAMBIO MINIMO: apuntar al backend <<<<<
+    const API_BASE = 'http://localhost:3000/api'; // cambiá puerto/host si tu backend usa otro
+
+    let selectedAvatar = 'assets/img/Cat_1.png';
+
+    const avatars = [
+        'assets/img/Cat_1.png',
+        'assets/img/Dog_1.png',
+        'assets/img/Female_1.png',
+        'assets/img/Female_2.png',
+        'assets/img/Female_3.png',
+        'assets/img/Male_1.png',
+        'assets/img/Male_2.png',
+        'assets/img/Male_3.png'
+    ];
+
+    function loadAvatars() {
+        avatarOptionsDiv.innerHTML = '';
+        avatars.forEach(avatarPath => {
+            const avatarOption = document.createElement('div');
+            avatarOption.classList.add('avatar-option');
+            if (avatarPath === selectedAvatar) {
+                avatarOption.classList.add('selected');
+            }
+            avatarOption.innerHTML = `<img src="${avatarPath}" alt="Avatar">`;
+            avatarOption.dataset.avatar = avatarPath;
+
+            avatarOption.addEventListener('click', () => {
+                document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+                avatarOption.classList.add('selected');
+                selectedAvatar = avatarPath;
+                registerAvatarPreview.querySelector('img').src = selectedAvatar;
+                avatarOptionsDiv.style.display = 'none';
+            });
+            avatarOptionsDiv.appendChild(avatarOption);
+        });
+        registerAvatarPreview.querySelector('img').src = selectedAvatar;
+    }
+
+    selectAvatarBtn.addEventListener('click', () => {
+        loadAvatars();
+        avatarOptionsDiv.style.display = avatarOptionsDiv.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    loadAvatars();
+
+    async function registerUser({ username, email, password, first_name, last_name, establishmentLocation, establishmentCoordinates }) {
+        try {
+            const response = await fetch(`${API_BASE}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password,
+                    first_name,
+                    last_name,
+                    establishmentLocation,
+                    establishmentCoordinates
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Error en el registro.');
+            }
+            return { success: true, message: data.message };
+        } catch (error) {
+            console.error('Error durante el registro:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
+    registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const username = registerUsernameInput.value.trim();
+        const email = registerEmailInput.value.trim();
+        const password = registerPasswordInput.value;
+        const repeatPassword = registerRepeatPasswordInput.value;
+        const first_name = registerFirstNameInput.value.trim();
+        const last_name = registerLastNameInput.value.trim();
+        const establishmentLocation = registerEstablishmentLocationInput.value.trim();
+        const latitudeRaw = registerLatitudeInput.value.trim();
+        const longitudeRaw = registerLongitudeInput.value.trim();
+        let establishmentCoordinates = undefined;
+        if (latitudeRaw && longitudeRaw) {
+            const lat = parseFloat(latitudeRaw);
+            const lng = parseFloat(longitudeRaw);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                establishmentCoordinates = [lat, lng];
+            }
+        }
+        registerMessageDiv.textContent = '';
+        registerMessageDiv.className = 'message';
+
+        if (password !== repeatPassword) {
+            registerMessageDiv.textContent = 'Las contraseñas no coinciden.';
+            registerMessageDiv.classList.add('error');
+            return;
+        }
+        if (!first_name || !last_name) {
+            registerMessageDiv.textContent = 'Nombre y apellido son obligatorios.';
+            registerMessageDiv.classList.add('error');
+            return;
+        }
+
+        const result = await registerUser({
+            username,
+            email,
+            password,
+            first_name,
+            last_name,
+            establishmentLocation,
+            establishmentCoordinates
+        });
+
+        if (result.success) {
+            registerMessageDiv.textContent = result.message + ' Serás redirigido al login...';
+            registerMessageDiv.classList.add('success');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        } else {
+            registerMessageDiv.textContent = result.message;
+            registerMessageDiv.classList.add('error');
+        }
+    });
+});
