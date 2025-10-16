@@ -6,6 +6,7 @@ import { start_DB } from "./src/config/database.js";
 import userRoute from "./src/routes/user.routes.js";
 import profileRoute from "./src/routes/profile.routes.js";
 import authRoute from "./src/routes/auth.routes.js";
+import plotRoute from "./src/routes/plot.routes.js";
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ app.use(cookieParser());
 app.use("/api/", userRoute);
 app.use("/api/", profileRoute);
 app.use("/api", authRoute);
+app.use("/api/", plotRoute);
 
 // ==== Manejador global de errores (siempre JSON) ====
 // Colocalo DESPUÉS de las rutas y ANTES del listen
