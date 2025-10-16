@@ -1,4 +1,6 @@
+import { comparePassword, hashPassword } from "../helpers/bcrypt.helpers.js";
 import { UserModel } from "../models/user.model.js";
+import { ProfileModel } from "../models/profile.model.js";
 
 // Obtener todo
 export const getAllUsers = async (req, res) => {
@@ -31,7 +33,7 @@ export const getUserById = async (req, res) => {
         {
           model: ProfileModel,
           as: "profile",
-          attributes: ["first_name", "last_name", "birth_date", "user_id"],
+          attributes: ["first_name", "last_name", "user_id"],
         },
       ],
     });
@@ -47,10 +49,11 @@ export const getUserById = async (req, res) => {
 export const createUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
+    const hashedPassword = await hashPassword(password);
     const newUser = await UserModel.create({
       username,
       email,
-      password,
+      password: hashedPassword,
       role,
     });
     return res.status(201).json(newUser);
@@ -71,7 +74,7 @@ export const updateUser = async (req, res) => {
     await user.update({
       username: username || user.username,
       email: email || user.email,
-      password: password || user.password,
+      password: hashPassword(password) || user.password,
       role: role || user.role,
     });
     return res.status(200).json(user);
@@ -89,9 +92,10 @@ export const deleteUser = async (req, res) => {
     const user = await UserModel.findOne({
       where: { id: req.params.id, deleted: false },
     });
-    await ProfileModel.destroy({
+    const profile = await ProfileModel.findOne({
       where: { user_id: user.id },
     });
+    await profile.update({ deleted: true });
     await user.update({ deleted: true });
     return res.status(200).json("Se eliminó el usuario exitosamente");
   } catch (error) {
