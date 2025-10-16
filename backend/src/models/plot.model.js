@@ -10,9 +10,8 @@ export const PlotModel = sequelize.define(
       allowNull: false,
     },
     location: {
-      type: DataTypes.GEOMETRY("POINT"),
+      type: DataTypes.STRING(255), // Address or coordinates
       allowNull: false,
-      // ESTO HAY QUE MODIFICAR PARA QUE SEA UN TIPO GEOMETRICO
     },
     cropType: {
       type: DataTypes.STRING(50),
@@ -26,7 +25,7 @@ export const PlotModel = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    ownerId: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -35,9 +34,17 @@ export const PlotModel = sequelize.define(
       },
     },
     status: {
-      type: DataTypes.ENUM("blue", "yellow", "green", "red", "black"),
+      type: DataTypes.ENUM(
+        "white", // sin sembrar
+        "violet", // sembrado
+        "blue", // en crecimiento
+        "yellow", // falta madurar
+        "green", // listo para cosechar
+        "gray", // cosechado
+        "red" // dañado
+      ),
       allowNull: false,
-      defaultValue: "blue",
+      defaultValue: "white",
     },
     sowingDate: {
       type: DataTypes.DATEONLY,
@@ -72,7 +79,13 @@ export const PlotModel = sequelize.define(
 );
 
 PlotModel.belongsTo(UserModel, {
-  foreignKey: "ownerId",
+  foreignKey: "user_id",
   as: "owner",
+  onDelete: "CASCADE",
+});
+
+UserModel.hasMany(PlotModel, {
+  foreignKey: "user_id",
+  as: "plots",
   onDelete: "CASCADE",
 });
