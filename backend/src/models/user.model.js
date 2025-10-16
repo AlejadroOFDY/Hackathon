@@ -26,10 +26,13 @@ export const UserModel = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: true,
     },
-    establishmentCoordinates: {
-      type: DataTypes.ARRAY(DataTypes.FLOAT),
+    establishmentLat: {
+      type: DataTypes.DECIMAL(10, 7),
       allowNull: true,
-      defaultValue: null,
+    },
+    establishmentLng: {
+      type: DataTypes.DECIMAL(10, 7),
+      allowNull: true,
     },
     deleted: {
       type: DataTypes.BOOLEAN,

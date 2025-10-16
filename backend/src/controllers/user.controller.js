@@ -54,7 +54,8 @@ export const createUser = async (req, res) => {
       password,
       role,
       establishmentLocation,
-      establishmentCoordinates,
+      establishmentLat,
+      establishmentLng,
     } = req.body;
     const hashedPassword = await hashPassword(password);
     const newUser = await UserModel.create({
@@ -63,7 +64,8 @@ export const createUser = async (req, res) => {
       password: hashedPassword,
       role,
       establishmentLocation,
-      establishmentCoordinates,
+      establishmentLat,
+      establishmentLng,
     });
     return res.status(201).json(newUser);
   } catch (error) {
@@ -85,7 +87,8 @@ export const updateUser = async (req, res) => {
       password,
       role,
       establishmentLocation,
-      establishmentCoordinates,
+      establishmentLat,
+      establishmentLng,
     } = req.body;
     await user.update({
       username: username || user.username,
@@ -94,10 +97,14 @@ export const updateUser = async (req, res) => {
       role: role || user.role,
       establishmentLocation:
         establishmentLocation || user.establishmentLocation,
-      establishmentCoordinates:
-        establishmentCoordinates !== undefined
-          ? establishmentCoordinates
-          : user.establishmentCoordinates,
+      establishmentLat:
+        establishmentLat !== undefined
+          ? establishmentLat
+          : user.establishmentLat,
+      establishmentLng:
+        establishmentLng !== undefined
+          ? establishmentLng
+          : user.establishmentLng,
     });
     return res.status(200).json(user);
   } catch (error) {
