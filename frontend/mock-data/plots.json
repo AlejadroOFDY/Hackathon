@@ -1,0 +1,30 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "code": "P-001",
+      "name": "Parcela Demo 1",
+      "ownerName": "Juan Pascal",
+      "cropType": "guayaba",
+      "status": "green",
+      "sowingDate": "2025-09-01",
+      "expectedHarvestDate": "2026-02-01",
+      "location": { "type": "Polygon", "coordinates": [[[-58.1825, -26.1835], [-58.1795, -26.1835], [-58.1795, -26.1855], [-58.1825, -26.1855], [-58.1825, -26.1835]]] },
+      "lastSensor": { "timestamp": "2025-10-15T12:34:56Z", "temp": 22.5, "humidity": 34.2, "pests": 2 },
+      "notes": "parcela nuclear"
+    },
+    {
+      "id": 2,
+      "code": "P-002",
+      "name": "Parcela Demo 2",
+      "ownerName": "María Gómez",
+      "cropType": "soja",
+      "status": "yellow",
+      "sowingDate": "2025-07-01",
+      "expectedHarvestDate": "2026-01-10",
+      "location": { "type": "Point", "coordinates": [-58.40, -34.59] },
+      "lastSensor": { "timestamp": "2025-10-15T09:00:00Z", "temp": 21.4, "humidity": 40.0, "pests": 1 },
+      "notes": "Demo 2"
+    }
+  ]
+}
