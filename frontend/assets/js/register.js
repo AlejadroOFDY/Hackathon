@@ -9,7 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const avatarOptionsDiv = document.getElementById('avatarOptions');
     const registerAvatarPreview = document.getElementById('registerAvatarPreview');
 
-    
+    // >>>>> CAMBIO MINIMO: apuntar al backend <<<<<
+    const API_BASE = 'http://localhost:3000/api'; // cambiá puerto/host si tu backend usa otro
+
     let selectedAvatar = 'assets/img/Cat_1.png';
 
     const avatars = [
@@ -55,9 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function registerUser(username, email, password) {
         try {
-            const response = await fetch('/register', {
+            const response = await fetch(`${API_BASE}/register`, { // << cambio: usar API_BASE
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                // credentials: 'include', // descomentar solo si tu backend usa cookies + CORS con credenciales
                 body: JSON.stringify({ username, email, password }),
             });
             const data = await response.json();
@@ -99,4 +102,4 @@ document.addEventListener('DOMContentLoaded', () => {
             registerMessageDiv.classList.add('error');
         }
     });
-}); 
+});
