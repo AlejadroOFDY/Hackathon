@@ -5,13 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginMessageDiv = document.getElementById('loginMessage');
 
     // ** [CONEXIÓN CON BACKEND ] **
+    const API_BASE = 'http://localhost:3000/api'; // Cambia el puerto/host si tu backend usa otro
+
     async function authenticateUser(username, password) {
         try {
-            const response = await fetch('/login', { 
+            const response = await fetch(`${API_BASE}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                // credentials: 'include', // Descomenta si tu backend usa cookies y CORS
                 body: JSON.stringify({ username, password }),
             });
 
