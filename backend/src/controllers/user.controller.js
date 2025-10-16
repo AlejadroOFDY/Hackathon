@@ -48,13 +48,22 @@ export const getUserById = async (req, res) => {
 // Crear
 export const createUser = async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const {
+      username,
+      email,
+      password,
+      role,
+      establishmentLocation,
+      establishmentCoordinates,
+    } = req.body;
     const hashedPassword = await hashPassword(password);
     const newUser = await UserModel.create({
       username,
       email,
       password: hashedPassword,
       role,
+      establishmentLocation,
+      establishmentCoordinates,
     });
     return res.status(201).json(newUser);
   } catch (error) {
@@ -70,12 +79,25 @@ export const updateUser = async (req, res) => {
     const user = await UserModel.findOne({
       where: { id: req.params.id, deleted: false },
     });
-    const { username, email, password, role } = req.body;
+    const {
+      username,
+      email,
+      password,
+      role,
+      establishmentLocation,
+      establishmentCoordinates,
+    } = req.body;
     await user.update({
       username: username || user.username,
       email: email || user.email,
-      password: hashPassword(password) || user.password,
+      password: password ? await hashPassword(password) : user.password,
       role: role || user.role,
+      establishmentLocation:
+        establishmentLocation || user.establishmentLocation,
+      establishmentCoordinates:
+        establishmentCoordinates !== undefined
+          ? establishmentCoordinates
+          : user.establishmentCoordinates,
     });
     return res.status(200).json(user);
   } catch (error) {

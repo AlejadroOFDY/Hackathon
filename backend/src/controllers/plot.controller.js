@@ -47,7 +47,37 @@ export const getPlotById = async (req, res) => {
 // Create plot
 export const createPlot = async (req, res) => {
   try {
-    const newPlot = await PlotModel.create(req.body);
+    const {
+      name,
+      location,
+      cropType,
+      lotCost,
+      area,
+      ownerId,
+      status,
+      sowingDate,
+      expectedHarvestDate,
+      actualHarvestDate,
+      damageDescription,
+      pests,
+      humidity,
+    } = req.body;
+    // location debe ser { type: 'Point', coordinates: [lng, lat] }
+    const newPlot = await PlotModel.create({
+      name,
+      location,
+      cropType,
+      lotCost,
+      area,
+      ownerId,
+      status,
+      sowingDate,
+      expectedHarvestDate,
+      actualHarvestDate,
+      damageDescription,
+      pests,
+      humidity,
+    });
     return res.status(201).json(newPlot);
   } catch (error) {
     return res
@@ -63,7 +93,36 @@ export const updatePlot = async (req, res) => {
       where: { id: req.params.id, deleted: false },
     });
     if (!plot) return res.status(404).json({ message: "Plot not found" });
-    await plot.update(req.body);
+    const {
+      name,
+      location,
+      cropType,
+      lotCost,
+      area,
+      ownerId,
+      status,
+      sowingDate,
+      expectedHarvestDate,
+      actualHarvestDate,
+      damageDescription,
+      pests,
+      humidity,
+    } = req.body;
+    await plot.update({
+      name: name || plot.name,
+      location: location || plot.location,
+      cropType: cropType || plot.cropType,
+      lotCost: lotCost !== undefined ? lotCost : plot.lotCost,
+      area: area || plot.area,
+      ownerId: ownerId || plot.ownerId,
+      status: status || plot.status,
+      sowingDate: sowingDate || plot.sowingDate,
+      expectedHarvestDate: expectedHarvestDate || plot.expectedHarvestDate,
+      actualHarvestDate: actualHarvestDate || plot.actualHarvestDate,
+      damageDescription: damageDescription || plot.damageDescription,
+      pests: pests || plot.pests,
+      humidity: humidity !== undefined ? humidity : plot.humidity,
+    });
     return res.status(200).json(plot);
   } catch (error) {
     return res

@@ -22,7 +22,20 @@ export const createPlotValidation = [
   body("location")
     .notEmpty()
     .withMessage("Location is required")
-    .isLength({ max: 255 }),
+    .custom((value) => {
+      if (
+        !value ||
+        value.type !== "Point" ||
+        !Array.isArray(value.coordinates) ||
+        value.coordinates.length !== 2 ||
+        !value.coordinates.every((coord) => typeof coord === "number")
+      ) {
+        throw new Error(
+          "Location must be a geometry Point with coordinates [lng, lat]"
+        );
+      }
+      return true;
+    }),
   body("cropType")
     .notEmpty()
     .withMessage("Crop type is required")
@@ -72,7 +85,22 @@ export const updatePlotValidation = [
       }
     }),
   body("name").optional().isLength({ max: 100 }),
-  body("location").optional().isLength({ max: 255 }),
+  body("location")
+    .optional()
+    .custom((value) => {
+      if (
+        value &&
+        (value.type !== "Point" ||
+          !Array.isArray(value.coordinates) ||
+          value.coordinates.length !== 2 ||
+          !value.coordinates.every((coord) => typeof coord === "number"))
+      ) {
+        throw new Error(
+          "Location must be a geometry Point with coordinates [lng, lat]"
+        );
+      }
+      return true;
+    }),
   body("cropType").optional().isLength({ max: 50 }),
   body("area").optional().isFloat({ min: 0.01 }),
   body("ownerId")

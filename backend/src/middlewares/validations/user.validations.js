@@ -63,8 +63,12 @@ export const createUserValidation = [
     .withMessage("La localización no puede superar los 255 caracteres"),
   body("establishmentCoordinates")
     .optional()
-    .isString()
-    .withMessage("Las coordenadas deben ser un string"),
+    .isArray({ min: 2 })
+    .withMessage("Las coordenadas deben ser un array de números (lat/lng)"),
+  body("establishmentCoordinates.*")
+    .optional()
+    .isFloat()
+    .withMessage("Cada coordenada debe ser un número válido"),
 ];
 
 // Actualizar
@@ -127,8 +131,12 @@ export const updateUserValidation = [
     .withMessage("La localización no puede superar los 255 caracteres"),
   body("establishmentCoordinates")
     .optional()
-    .isString()
-    .withMessage("Las coordenadas deben ser un string"),
+    .isArray({ min: 2 })
+    .withMessage("Las coordenadas deben ser un array de números (lat/lng)"),
+  body("establishmentCoordinates.*")
+    .optional()
+    .isFloat()
+    .withMessage("Cada coordenada debe ser un número válido"),
 ];
 
 // Eliminar

@@ -27,9 +27,9 @@ export const UserModel = sequelize.define(
       allowNull: true,
     },
     establishmentCoordinates: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.FLOAT),
       allowNull: true,
-      defaultValue: '',
+      defaultValue: null,
     },
     deleted: {
       type: DataTypes.BOOLEAN,
