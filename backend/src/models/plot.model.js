@@ -10,9 +10,9 @@ export const PlotModel = sequelize.define(
       allowNull: false,
     },
     location: {
-      type: DataTypes.GEOMETRY("POINT"),
+      type: DataTypes.GEOMETRY,
       allowNull: false,
-      // ESTO HAY QUE MODIFICAR PARA QUE SEA UN TIPO GEOMETRICO
+      // Accepts Point, Polygon, MultiPolygon
     },
     cropType: {
       type: DataTypes.STRING(50),

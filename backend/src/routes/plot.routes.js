@@ -18,15 +18,9 @@ import { authMiddleware } from "../middlewares/auth.middlewares.js";
 
 const router = Router();
 
-router.get("/", authMiddleware, adminMiddleware, getAllPlots);
-router.get(
-  "/:id",
-  authMiddleware,
-  adminMiddleware,
-  getPlotByIdValidation,
-  validator,
-  getPlotById
-);
+// Public endpoints for map consumption
+router.get("/", getAllPlots);
+router.get("/:id", getPlotByIdValidation, validator, getPlotById);
 router.post("/", createPlotValidation, validator, createPlot);
 router.put("/:id", updatePlotValidation, validator, updatePlot);
 router.delete("/:id", deletePlotValidation, validator, deletePlot);

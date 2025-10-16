@@ -31,7 +31,8 @@ function statusStyle(status) {
 }
 
 export async function initMap() {
-  map = L.map('map').setView([-34.60, -58.40], 12);
+  // Default center: Formosa, barrio San Antonio (approx)
+  map = L.map('map').setView([-26.184, -58.181], 13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© OpenStreetMap'
@@ -79,6 +80,39 @@ export async function initMap() {
       console.error('search handler error', err);
     }
   });
+}
+
+// Parcel selection mode: click map to select a point (returns latlng via callback)
+let parcelSelectEnabled = false;
+let parcelSelectHandler = null;
+let parcelTempMarker = null;
+export function enableParcelSelect(callback) {
+  if (!map) return;
+  parcelSelectEnabled = true;
+  parcelSelectHandler = (e) => {
+    const latlng = e.latlng;
+    if (!parcelTempMarker) {
+      parcelTempMarker = L.marker(latlng, { draggable: true }).addTo(map);
+      parcelTempMarker.on('dragend', (ev) => {
+        const pos = ev.target.getLatLng();
+        if (callback && typeof callback === 'function') callback(pos);
+      });
+    } else {
+      parcelTempMarker.setLatLng(latlng);
+    }
+    if (callback && typeof callback === 'function') callback(latlng);
+  };
+  map.on('click', parcelSelectHandler);
+}
+export function disableParcelSelect() {
+  if (!map || !parcelSelectEnabled) return;
+  map.off('click', parcelSelectHandler);
+  parcelSelectHandler = null;
+  parcelSelectEnabled = false;
+  if (parcelTempMarker) {
+    map.removeLayer(parcelTempMarker);
+    parcelTempMarker = null;
+  }
 }
 
 async function loadAndRender(params = {}) {

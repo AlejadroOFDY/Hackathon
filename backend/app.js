@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
-// import cors from "cors";
-// import cookieParser from "cookie-parser";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import { start_DB } from "./src/config/database.js";
 import userRoute from "./src/routes/user.routes.js";
 import profileRoute from "./src/routes/profile.routes.js";
@@ -14,13 +14,26 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
-// app.use(
-//   cors({
-//     origin: "http://localhost:5173", // No es una dirección arbitraria es una desde donde se consulta el front
-//     credentials: true,
-//   })
-// );
-// app.use(cookieParser());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      const allowed = [
+        'http://localhost:5173', // Vite / dev
+        'http://localhost:5500', // http-server
+        'http://127.0.0.1:5500'
+      ];
+      // allow requests with no origin (e.g. curl, mobile apps)
+      if (!origin) return callback(null, true);
+      if (allowed.indexOf(origin) !== -1) {
+        return callback(null, true);
+      } else {
+        return callback(new Error('CORS policy: Origin not allowed'));
+      }
+    },
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 
 app.use("/api/", userRoute);
 app.use("/api/", profileRoute);

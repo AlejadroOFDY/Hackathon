@@ -1,5 +1,6 @@
 import { UserModel } from "../models/user.model.js";
 import { ProfileModel } from "../models/profile.model.js";
+import { PlotModel } from "../models/plot.model.js";
 import { generateToken } from "../helpers/jwt.helpers.js";
 import { comparePassword, hashPassword } from "../helpers/bcrypt.helpers.js";
 
@@ -48,7 +49,11 @@ export const register = async (req, res) => {
       first_name,
       last_name,
     });
-    return res.status(201).json({ message: "Usuario creado existosamente" });
+    // generate token and set cookie so user is authenticated immediately
+    const token = generateToken(user);
+    res.cookie("token", token, { httpOnly: true, maxAge: 1000 * 60 * 60 });
+    const userSafe = await UserModel.findByPk(user.id, { attributes: { exclude: ['password'] } });
+    return res.status(201).json({ message: "Usuario creado existosamente", data: userSafe });
   } catch (error) {
     return res
       .status(500)
@@ -94,4 +99,31 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
   res.clearCookie("token"); // Eliminará la cookie
   return res.json({ message: "Logout exitoso" });
+};
+
+// Get current user's profile (requires authMiddleware)
+export const myProfile = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    const user = await UserModel.findByPk(userId, {
+      attributes: { exclude: ["password"] },
+      include: [{ model: ProfileModel, as: "profile" }],
+    });
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message, message: "No se pudo obtener el perfil" });
+  }
+};
+
+// Get current user's plots (requires authMiddleware)
+export const myPlots = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    const plots = await PlotModel.findAll({ where: { ownerId: userId, deleted: false } });
+    return res.status(200).json(plots);
+  } catch (error) {
+    return res.status(500).json({ error: error.message, message: "No se pudieron obtener las parcelas" });
+  }
 };

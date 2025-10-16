@@ -44,3 +44,46 @@ export async function fetchPlotById(id) {
   }
   return res.json();
 }
+
+export async function registerUser(body) {
+  if (USE_MOCK) {
+    // naive mock: succeed
+    return { message: 'Usuario creado (mock)' };
+  }
+  const res = await timeoutFetch(`${BASE_API}/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    credentials: 'include'
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function loginUser(body) {
+  if (USE_MOCK) {
+    return { message: 'Login mock' };
+  }
+  const res = await timeoutFetch(`${BASE_API}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    credentials: 'include'
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function createPlot(body) {
+  if (USE_MOCK) {
+    return { message: 'Plot created (mock)' };
+  }
+  const res = await timeoutFetch(`${BASE_API}/plots`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    credentials: 'include'
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}

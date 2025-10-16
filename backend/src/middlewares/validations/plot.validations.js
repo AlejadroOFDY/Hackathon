@@ -23,16 +23,21 @@ export const createPlotValidation = [
     .notEmpty()
     .withMessage("Location is required")
     .custom((value) => {
-      if (
-        !value ||
-        value.type !== "Point" ||
-        !Array.isArray(value.coordinates) ||
-        value.coordinates.length !== 2 ||
-        !value.coordinates.every((coord) => typeof coord === "number")
-      ) {
-        throw new Error(
-          "Location must be a geometry Point with coordinates [lng, lat]"
-        );
+      // Accept Point [lng, lat] or Polygon [[...]]
+      if (!value || !value.type || !value.coordinates) {
+        throw new Error("Location must be a GeoJSON geometry (Point or Polygon)");
+      }
+      if (value.type === 'Point') {
+        if (!Array.isArray(value.coordinates) || value.coordinates.length !== 2 || !value.coordinates.every(c => typeof c === 'number')) {
+          throw new Error('Point coordinates must be [lng, lat] numbers');
+        }
+      } else if (value.type === 'Polygon' || value.type === 'MultiPolygon') {
+        // basic structural check
+        if (!Array.isArray(value.coordinates) || value.coordinates.length === 0) {
+          throw new Error('Polygon must have coordinates array');
+        }
+      } else {
+        throw new Error('Unsupported geometry type');
       }
       return true;
     }),
@@ -45,11 +50,11 @@ export const createPlotValidation = [
     .withMessage("Area is required")
     .isFloat({ min: 0.01 }),
   body("ownerId")
-    .notEmpty()
-    .withMessage("Owner is required")
+    .optional()
     .isInt()
     .withMessage("Owner id must be an integer")
     .custom(async (value) => {
+      if (value === undefined || value === null) return true;
       const user = await UserModel.findByPk(value);
       if (!user || user.deleted) {
         throw new Error("Owner not found");

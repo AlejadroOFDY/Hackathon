@@ -62,14 +62,15 @@ export const createPlot = async (req, res) => {
       pests,
       humidity,
     } = req.body;
-    // location debe ser { type: 'Point', coordinates: [lng, lat] }
+    // if request is authenticated and ownerId not provided, use req.user.id
+    const finalOwnerId = ownerId || (req.user && req.user.id) || null;
     const newPlot = await PlotModel.create({
       name,
       location,
       cropType,
       lotCost,
       area,
-      ownerId,
+      ownerId: finalOwnerId,
       status,
       sowingDate,
       expectedHarvestDate,
