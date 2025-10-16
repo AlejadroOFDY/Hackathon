@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="avatar-selection-area">
+                <div class="avatar-preview" id="registerAvatarPreview">
+                    <img src="img/avatar1.png" alt="Avatar seleccionado">
+                </div>
+                <button type="button" class="btn btn-secondary" id="selectAvatarBtn">Elige tu Avatar</button>
+                <div class="avatar-options" id="avatarOptions">
+                    </div>
+            </div>
+            <h2>Adventure awaits you.</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <input type="text" id="registerUsername" placeholder="Usuario" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerPassword" placeholder="Contraseña" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerRepeatPassword" placeholder="Repite Contraseña" required>
+                </div>
+                <button type="submit" class="btn btn-success">Join Us</button>
+            </form>
+            <p class="login-link">Already have an account? <a href="login.html">Sign In</a></p>
+            <div id="registerMessage" class="message"></div>
+        </div>
+    </div>
+    <script src="js/register.js"></script>
+</body>
+</html>
