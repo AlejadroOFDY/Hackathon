@@ -57,6 +57,14 @@ export const createUserValidation = [
     .withMessage("El rol no puede estar vacío")
     .isIn(["user", "admin"])
     .withMessage("los roles solo pueden ser user o admin"),
+  body("establishmentLocation")
+    .optional()
+    .isLength({ max: 255 })
+    .withMessage("La localización no puede superar los 255 caracteres"),
+  body("establishmentCoordinates")
+    .optional()
+    .isString()
+    .withMessage("Las coordenadas deben ser un string"),
 ];
 
 // Actualizar
@@ -113,6 +121,14 @@ export const updateUserValidation = [
     .withMessage("El rol no puede estar vacío")
     .isIn(["user", "admin"])
     .withMessage("los roles solo pueden ser user o admin"),
+  body("establishmentLocation")
+    .optional()
+    .isLength({ max: 255 })
+    .withMessage("La localización no puede superar los 255 caracteres"),
+  body("establishmentCoordinates")
+    .optional()
+    .isString()
+    .withMessage("Las coordenadas deben ser un string"),
 ];
 
 // Eliminar

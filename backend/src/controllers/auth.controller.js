@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     const user = await UserModel.create({
       username,
       email,
-      password,
+      password: hashPassword(password),
       role,
     });
 

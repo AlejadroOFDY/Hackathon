@@ -22,6 +22,15 @@ export const UserModel = sequelize.define(
       type: DataTypes.ENUM("user", "admin"),
       defaultValue: "user",
     },
+    establishmentLocation: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    establishmentCoordinates: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: '',
+    },
     deleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
