@@ -1,0 +1,152 @@
+/* --- ESTILOS GENERALES DE LA PÁGINA --- */
+
+/* Define el estilo base para todo el cuerpo de la página */
+body {
+    font-family: Arial, sans-serif; /* Tipo de letra principal */
+    background-color: #f0f2f5;       /* Color de fondo gris claro */
+    display: flex;                   /* Usa Flexbox para centrar contenido */
+    justify-content: center;         /* Centra horizontalmente */
+    align-items: center;             /* Centra verticalmente */
+    min-height: 100vh;               /* Altura mínima igual a la altura de la pantalla */
+    margin: 0;                       /* Elimina el margen por defecto del body */
+}
+
+/* Contenedor principal que envuelve la tarjeta del formulario */
+.container {
+    padding: 20px; /* Añade un espacio alrededor de la tarjeta */
+}
+
+/* --- ESTILO DE LA TARJETA DEL FORMULARIO --- */
+
+/* La tarjeta blanca donde se encuentra el formulario */
+.form-card {
+    background-color: #fff;       /* Fondo blanco */
+    padding: 40px;                /* Espacio interior para que el contenido no esté pegado a los bordes */
+    border-radius: 8px;           /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave para dar profundidad */
+    text-align: center;           /* Centra el texto dentro de la tarjeta */
+    width: 350px;                 /* Ancho fijo de la tarjeta */
+}
+
+/* Estilo para el título "Welcome bare mortal." */
+h2 {
+    color: #333;              /* Color de texto oscuro */
+    margin-bottom: 30px;      /* Espacio debajo del título */
+    font-size: 1.5em;         /* Tamaño de la fuente */
+}
+
+/* Círculo donde iría el avatar del usuario (en el login es un placeholder) */
+.avatar-placeholder {
+    width: 100px;                    /* Ancho */
+    height: 100px;                   /* Alto */
+    border-radius: 50%;              /* Lo hace perfectamente redondo */
+    background-color: #e0e0e0;       /* Color de fondo gris */
+    margin: 0 auto 20px auto;        /* Centra el círculo y le da espacio abajo */
+    display: flex;                   /* Usa Flexbox para centrar el contenido interno */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Imagen dentro del placeholder del avatar */
+.avatar-placeholder img {
+    width: 100%;       /* La imagen ocupa todo el ancho del círculo */
+    height: 100%;      /* La imagen ocupa todo el alto del círculo */
+    object-fit: cover; /* Asegura que la imagen cubra el espacio sin deformarse */
+}
+
+
+/* --- ESTILOS DE LOS ELEMENTOS DEL FORMULARIO --- */
+
+/* Contenedor para cada campo de entrada (input) */
+.form-group {
+    margin-bottom: 20px; /* Espacio entre los campos de texto */
+}
+
+/* Estilo para los campos de texto (usuario, email, contraseña) */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: calc(100% - 20px); /* Ancho completo menos el padding */
+    padding: 10px;            /* Espacio interior para que el texto no esté pegado */
+    border: 1px solid #ddd;   /* Borde gris claro */
+    border-radius: 4px;       /* Bordes redondeados */
+    font-size: 1em;           /* Tamaño de la fuente */
+}
+
+/* Contenedor para las opciones "Keep me signed in" y "Reset Password" */
+.form-options {
+    display: flex;                  /* Coloca los elementos en una línea */
+    justify-content: space-between; /* Empuja los elementos a los extremos */
+    align-items: center;            /* Los alinea verticalmente */
+    margin-bottom: 20px;            /* Espacio debajo */
+    font-size: 0.9em;               /* Texto un poco más pequeño */
+}
+
+/* Estilo para los enlaces dentro de las opciones */
+.form-options a {
+    color: #007bff;      /* Color azul para el enlace */
+    text-decoration: none; /* Sin subrayado */
+}
+
+/* --- ESTILOS DE LOS BOTONES Y ENLACES --- */
+
+/* Estilo base para todos los botones */
+.btn {
+    padding: 12px 25px;       /* Espacio interior del botón */
+    border: none;             /* Sin borde */
+    border-radius: 4px;       /* Bordes redondeados */
+    color: #fff;              /* Texto blanco */
+    font-size: 1.1em;         /* Tamaño de la fuente */
+    cursor: pointer;          /* El cursor cambia a una mano */
+    transition: background-color 0.3s ease; /* Transición suave al pasar el mouse */
+    width: 100%;              /* Ancho completo */
+    box-sizing: border-box;   /* Evita que el padding aumente el ancho total */
+}
+
+/* Estilo específico para el botón principal (Login) */
+.btn-primary {
+    background-color: #007bff; /* Color azul */
+}
+
+/* Efecto al pasar el mouse sobre el botón principal */
+.btn-primary:hover {
+    background-color: #0056b3; /* Azul más oscuro */
+}
+
+/* Estilo para el enlace de "Sign up" */
+.signup-link {
+    margin-top: 20px; /* Espacio arriba */
+    font-size: 0.9em;   /* Texto un poco más pequeño */
+    color: #555;      /* Color de texto gris */
+}
+
+/* Color del texto del enlace "Sign up" */
+.signup-link a {
+    color: #007bff;      /* Color azul */
+    text-decoration: none; /* Sin subrayado */
+}
+
+
+/* --- ESTILOS PARA MENSAJES DE ERROR O ÉXITO --- */
+
+/* Contenedor para los mensajes de feedback */
+.message {
+    margin-top: 20px;    /* Espacio arriba */
+    padding: 10px;       /* Espacio interior */
+    border-radius: 4px;  /* Bordes redondeados */
+    font-size: 0.9em;    /* Texto un poco más pequeño */
+}
+
+/* Estilo específico para mensajes de error */
+.message.error {
+    background-color: #f8d7da; /* Fondo rojo claro */
+    color: #721c24;            /* Texto rojo oscuro */
+    border: 1px solid #f5c6cb; /* Borde rojo */
+}
+
+/* Estilo específico para mensajes de éxito */
+.message.success {
+    background-color: #d4edda; /* Fondo verde claro */
+    color: #155724;            /* Texto verde oscuro */
+    border: 1px solid #c3e6cb; /* Borde verde */
+}

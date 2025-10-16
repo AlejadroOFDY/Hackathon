@@ -1,0 +1,200 @@
+/* Define el estilo base para todo el cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Contenedor principal que envuelve la tarjeta del formulario */
+.container {
+    padding: 20px;
+}
+
+/* --- ESTILO DE LA TARJETA DEL FORMULARIO --- */
+
+/* La tarjeta blanca donde se encuentra el formulario */
+.form-card {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+}
+
+/* Estilo para el título "Crea tu Cuenta" */
+h2 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 1.5em;
+}
+
+/* --- ESTILOS ESPECÍFICOS PARA LA SELECCIÓN DE AVATAR --- */
+
+/* Área que contiene la vista previa del avatar y el botón para elegir */
+.avatar-selection-area {
+    margin-bottom: 20px;
+}
+
+/* Círculo que muestra el avatar actualmente seleccionado */
+.avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 20px auto;
+    overflow: hidden;
+}
+
+/* La imagen dentro del círculo de vista previa */
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* AJUSTE: Le pide al navegador que preserve la nitidez al escalar la imagen */
+    image-rendering: high-quality;
+}
+
+/* Contenedor donde aparecen todas las opciones de avatares para elegir */
+.avatar-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    display: none;
+}
+
+/* Estilo para cada círculo de avatar individual en la lista de opciones */
+.avatar-option {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+/* Efecto al pasar el mouse sobre una opción de avatar */
+.avatar-option:hover {
+    border-color: #007bff;
+}
+
+/* Estilo para el avatar que está seleccionado */
+.avatar-option.selected {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5);
+}
+
+/* La imagen dentro de cada opción de avatar */
+.avatar-option img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* AJUSTE: Le pide al navegador que preserve la nitidez al escalar la imagen */
+    image-rendering: high-quality;
+}
+
+/* --- ESTILOS DE LOS ELEMENTOS DEL FORMULARIO --- */
+
+/* Contenedor para cada campo de entrada (input) */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Estilo para los campos de texto */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+/* --- ESTILOS DE LOS BOTONES Y ENLACES --- */
+
+/* Estilo base para todos los botones */
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Estilo específico para el botón de registro ("Join Us") */
+.btn-success {
+    background-color: #28a745;
+}
+
+/* Efecto al pasar el mouse sobre el botón de registro */
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* Botón secundario ("Elige tu Avatar") */
+.btn-secondary {
+    background-color: #6c757d;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    font-size: 0.9em;
+}
+
+/* Efecto al pasar el mouse sobre el botón secundario */
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Estilo para el enlace de "Sign In" */
+.login-link {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Color del texto del enlace "Sign In" */
+.login-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* --- ESTILOS PARA MENSAJES DE ERROR O ÉXITO --- */
+
+/* Contenedor para los mensajes de feedback */
+.message {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* Mensajes de error */
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Mensajes de éxito */
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}

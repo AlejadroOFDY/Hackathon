@@ -4,39 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="assets/css/register.css">
 </head>
 <body>
     <div class="container">
         <div class="form-card">
             <div class="avatar-selection-area">
                 <div class="avatar-preview" id="registerAvatarPreview">
-                    <img src="img/avatar1.png" alt="Avatar seleccionado">
+                    <img src="assets/img/Male_3.png" alt="Avatar seleccionado">
                 </div>
-                <button type="button" class="btn btn-secondary" id="selectAvatarBtn">Elige tu Avatar</button>
+                <button type="button" class="btn btn-secondary" id="selectAvatarBtn">Selecciona un Avatar</button>
                 <div class="avatar-options" id="avatarOptions">
                     </div>
             </div>
-            <h2>Adventure awaits you.</h2>
+            
+            <h2>Crea tu Cuenta</h2>
+            
             <form id="registerForm">
                 <div class="form-group">
-                    <input type="text" id="registerUsername" placeholder="Usuario" required>
+                    <input type="text" id="registerUsername" placeholder="Nombre de Usuario" required>
                 </div>
                 <div class="form-group">
-                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <input type="email" id="registerEmail" placeholder="Correo Electrónico" required>
                 </div>
                 <div class="form-group">
                     <input type="password" id="registerPassword" placeholder="Contraseña" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" id="registerRepeatPassword" placeholder="Repite Contraseña" required>
+                    <input type="password" id="registerRepeatPassword" placeholder="Confirmar Contraseña" required>
                 </div>
-                <button type="submit" class="btn btn-success">Join Us</button>
+
+                <button type="submit" class="btn btn-success">Registrarse</button>
             </form>
-            <p class="login-link">Already have an account? <a href="login.html">Sign In</a></p>
+
+            <p class="login-link">¿Ya tienes una cuenta? <a href="login.html">Inicia Sesión</a></p>
             <div id="registerMessage" class="message"></div>
         </div>
     </div>
-    <script src="js/register.js"></script>
+    <script src="assets/js/register.js"></script>
 </body>
 </html>
