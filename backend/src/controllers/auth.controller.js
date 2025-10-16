@@ -4,16 +4,7 @@ import { generateToken } from "../helpers/jwt.helpers.js";
 import { comparePassword, hashPassword } from "../helpers/bcrypt.helpers.js";
 
 export const register = async (req, res) => {
-  const {
-    username,
-    email,
-    password,
-    role,
-    first_name,
-    last_name,
-    establishmentLocation,
-    establishmentCoordinates,
-  } = req.body;
+  const { username, email, password, role, first_name, last_name } = req.body;
   try {
     const hashedPassword = await hashPassword(password);
 
@@ -39,8 +30,6 @@ export const register = async (req, res) => {
       email,
       password: hashedPassword,
       role,
-      establishmentLocation,
-      establishmentCoordinates,
     });
 
     await ProfileModel.create({
@@ -52,7 +41,7 @@ export const register = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ error: message.error, message: "No se pudo crear el usuario" });
+      .json({ error: error.message, message: "No se pudo crear el usuario" });
   }
 };
 
