@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerEmailInput = document.getElementById('registerEmail');
     const registerPasswordInput = document.getElementById('registerPassword');
     const registerRepeatPasswordInput = document.getElementById('registerRepeatPassword');
+    const registerFirstNameInput = document.getElementById('registerFirstName');
+    const registerLastNameInput = document.getElementById('registerLastName');
+    const registerEstablishmentLocationInput = document.getElementById('registerEstablishmentLocation');
+    const registerLatitudeInput = document.getElementById('registerLatitude');
+    const registerLongitudeInput = document.getElementById('registerLongitude');
     const registerMessageDiv = document.getElementById('registerMessage');
     const selectAvatarBtn = document.getElementById('selectAvatarBtn');
     const avatarOptionsDiv = document.getElementById('avatarOptions');
@@ -55,13 +60,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadAvatars();
 
-    async function registerUser(username, email, password) {
+    async function registerUser({ username, email, password, first_name, last_name, establishmentLocation, establishmentCoordinates }) {
         try {
-            const response = await fetch(`${API_BASE}/register`, { // << cambio: usar API_BASE
+            const response = await fetch(`${API_BASE}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                // credentials: 'include', // descomentar solo si tu backend usa cookies + CORS con credenciales
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password,
+                    first_name,
+                    last_name,
+                    establishmentLocation,
+                    establishmentCoordinates
+                }),
             });
             const data = await response.json();
             if (!response.ok) {
@@ -80,6 +92,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = registerEmailInput.value.trim();
         const password = registerPasswordInput.value;
         const repeatPassword = registerRepeatPasswordInput.value;
+        const first_name = registerFirstNameInput.value.trim();
+        const last_name = registerLastNameInput.value.trim();
+        const establishmentLocation = registerEstablishmentLocationInput.value.trim();
+        const latitudeRaw = registerLatitudeInput.value.trim();
+        const longitudeRaw = registerLongitudeInput.value.trim();
+        let establishmentCoordinates = undefined;
+        if (latitudeRaw && longitudeRaw) {
+            const lat = parseFloat(latitudeRaw);
+            const lng = parseFloat(longitudeRaw);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                establishmentCoordinates = [lat, lng];
+            }
+        }
         registerMessageDiv.textContent = '';
         registerMessageDiv.className = 'message';
 
@@ -88,8 +113,21 @@ document.addEventListener('DOMContentLoaded', () => {
             registerMessageDiv.classList.add('error');
             return;
         }
+        if (!first_name || !last_name) {
+            registerMessageDiv.textContent = 'Nombre y apellido son obligatorios.';
+            registerMessageDiv.classList.add('error');
+            return;
+        }
 
-        const result = await registerUser(username, email, password);
+        const result = await registerUser({
+            username,
+            email,
+            password,
+            first_name,
+            last_name,
+            establishmentLocation,
+            establishmentCoordinates
+        });
 
         if (result.success) {
             registerMessageDiv.textContent = result.message + ' Serás redirigido al login...';
