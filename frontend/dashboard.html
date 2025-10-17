@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa de Parcelas • Producción y Ambiente</title>
+  <link rel="stylesheet" href="assets/css/dashboard.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="logo">🌱</span>
+      <h1>Mapa de Parcelas</h1>
+    </div>
+    <nav class="legend" aria-label="Leyenda de estados">
+      <span class="legend-item"><i class="dot white"></i>Sin sembrar</span>
+      <span class="legend-item"><i class="dot violet"></i>Sembrado</span>
+      <span class="legend-item"><i class="dot blue"></i>En crecimiento</span>
+      <span class="legend-item"><i class="dot yellow"></i>Falta madurar</span>
+      <span class="legend-item"><i class="dot green"></i>Listo para cosechar</span>
+      <span class="legend-item"><i class="dot gray"></i>Cosechado</span>
+      <span class="legend-item"><i class="dot red"></i>Dañado</span>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="map-panel" aria-label="Mapa de parcelas">
+      <div id="parcelMap" class="map-grid" role="grid" aria-live="polite"></div>
+    </section>
+
+    <aside id="parcelDetails" class="details-panel" aria-live="polite">
+      <div class="details-header">
+        <h2 id="detailsTitle">Selecciona una parcela</h2>
+      </div>
+      <div class="details-body" id="detailsBody">
+        <p>Haz clic en una parcela del mapa para ver su información.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="app-footer">
+    <small>Hackathon • Producción y Ambiente</small>
+  </footer>
+
+  <script src="assets/js/dashboard.js"></script>
+</body>
+</html>
