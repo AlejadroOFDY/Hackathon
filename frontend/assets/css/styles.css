@@ -1,0 +1,115 @@
+:root{
+	--green-600: #2e8b57;
+	--green-500: #28a745;
+	--green-400: #66bb6a;
+	--muted-bg: #f6fbf6;
+}
+
+/* Reset ligero para el body manteniendo compatibilidad con otras hojas */
+body{
+	font-family: "Segoe UI", Roboto, Arial, sans-serif;
+	margin: 0;
+	background: var(--muted-bg);
+	color: #222;
+}
+
+/* Navbar brand */
+.navbar-brand .brand-name{
+	font-weight: 700;
+	color: var(--green-600);
+}
+
+.navbar .btn-outline-success{
+	border-color: rgba(46,139,87,0.3);
+	color: var(--green-600);
+}
+
+.navbar .btn-outline-success:hover{
+	background: rgba(46,139,87,0.06);
+}
+
+.navbar .btn-success{
+	background: var(--green-500);
+	border-color: var(--green-500);
+}
+
+/* Left decorative pane */
+.left-pane{
+	background: linear-gradient(135deg, var(--green-600), var(--green-500));
+	min-height: 100vh;
+}
+
+.left-pane h1, .left-pane p{ color: rgba(255,255,255,0.95); }
+
+/* Right pane: donde van las parcelas */
+.right-pane{
+	background: #ffffff;
+	box-shadow: -8px 0 24px rgba(0,0,0,0.04);
+	overflow-y: auto;
+}
+
+.plot-container{
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 1rem;
+}
+
+.plot-card{
+	border: 1px solid #e6f4ea;
+	background: linear-gradient(180deg, #fff, #f7fff7);
+	border-radius: 10px;
+	padding: 12px;
+	box-shadow: 0 6px 14px rgba(46,139,87,0.06);
+}
+
+.plot-card .title{
+	font-weight: 700;
+	color: var(--green-600);
+	margin-bottom: 6px;
+}
+
+.plot-card .meta{
+	font-size: 0.9rem;
+	color: #3b3b3b;
+	margin-bottom: 8px;
+}
+
+.plot-card .badge-area{
+	display:flex;
+	gap:6px;
+	flex-wrap:wrap;
+}
+
+.plot-badge{
+	background: var(--green-400);
+	color: #fff;
+	padding: 4px 8px;
+	border-radius: 999px;
+	font-size: 0.8rem;
+}
+
+.plot-actions{
+	display:flex;
+	gap:8px;
+	margin-top:8px;
+}
+
+.btn-outline-green{
+	border-color: var(--green-500);
+	color: var(--green-500);
+}
+
+.btn-outline-green:hover{
+	background: var(--green-500);
+	color: #fff;
+}
+
+/* Micro responsive tweaks */
+@media (max-width: 767.98px){
+	.left-pane{ display:none; }
+	.right-pane{ padding: 1.5rem; }
+		.plot-container{ grid-template-columns: 1fr; }
+}
+
+/* Small helper */
+.text-muted-small{ color: #6b6b6b; font-size:0.9rem }

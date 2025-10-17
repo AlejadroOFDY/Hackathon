@@ -44,6 +44,22 @@ export const getPlotById = async (req, res) => {
   }
 };
 
+// Get plots for authenticated user
+export const getMyPlots = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+    const plots = await PlotModel.findAll({
+      where: { user_id: userId, deleted: false },
+    });
+    return res.status(200).json(plots);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: error.message, message: 'Could not fetch user plots' });
+  }
+};
+
 // Create plot
 export const createPlot = async (req, res) => {
   try {

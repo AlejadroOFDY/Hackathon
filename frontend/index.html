@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Mis Parcelas</title>
+		<!-- Bootstrap CSS CDN -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="assets/css/styles.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+			<div class="container-fluid">
+				<a class="navbar-brand d-flex align-items-center" href="#">
+					<img src="assets/img/logo.png" alt="Ivifor" width="36" height="36" class="me-2">
+					<span class="brand-name">Ivifor</span>
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-end" id="navMenu">
+					<ul class="navbar-nav align-items-center">
+						<li class="nav-item me-2"><a class="btn btn-outline-success" href="login.html">Iniciar sesión</a></li>
+						<li class="nav-item"><a class="btn btn-success" href="register.html">Registrarse</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div class="container-fluid min-vh-100 d-flex align-items-stretch p-0">
+			<div class="row g-0 flex-fill w-100">
+				<!-- Left column: espacio decorativo o información breve -->
+				<aside class="col-md-6 d-none d-md-flex align-items-center justify-content-center left-pane">
+					<div class="text-center text-white px-4">
+						<h1 class="display-6 fw-bold">Bienvenido</h1>
+						<p class="lead">Aquí puedes ver y administrar tus parcelas.</p>
+						<p class="small">Usa el panel derecho para revisar tus parcelas registradas.</p>
+					</div>
+				</aside>
+
+				<!-- Right column: lista de parcelas del usuario -->
+				<main class="col-12 col-md-6 right-pane p-4">
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<h2 class="mb-0 d-none">Mis Parcelas</h2>
+						<button id="refreshBtn" class="btn btn-success btn-sm">Refrescar</button>
+					</div>
+
+								<div id="plotContainer" class="plot-container">
+									<!-- Las tarjetas de parcela se renderizan aquí -->
+								</div>
+
+								<div id="noPlot" class="text-center text-muted mt-4 d-none">
+									No hay parcelas para mostrar.
+								</div>
+				</main>
+			</div>
+		</div>
+
+		<!-- Bootstrap JS -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="assets/js/index.js"></script>
+    
+					<!-- Modal para ver detalles de parcela (más compacto) -->
+					<div class="modal fade" id="plotModal" tabindex="-1" aria-labelledby="plotModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-md modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="plotModalLabel">Detalles de Parcela</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div id="plotDetails">
+									<!-- Contenido dinámico inyectado por JS -->
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+								<button id="editFromModal" type="button" class="btn btn-success">Editar</button>
+							</div>
+						</div>
+					</div>
+
+							<!-- Modal pequeño para cambiar estado -->
+							<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+								<div class="modal-dialog modal-sm modal-dialog-centered">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h6 class="modal-title" id="statusModalLabel">Seleccionar estado</h6>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<div id="statusOptions" class="d-flex flex-wrap gap-2 justify-content-center"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+				</div>
+	</body>
+</html>

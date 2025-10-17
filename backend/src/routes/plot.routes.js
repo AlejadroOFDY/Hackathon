@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getAllPlots,
+  getMyPlots,
   getPlotById,
   createPlot,
   updatePlot,
@@ -18,17 +19,18 @@ import { authMiddleware } from "../middlewares/auth.middlewares.js";
 
 const router = Router();
 
-router.get("/plot", authMiddleware, adminMiddleware, getAllPlots);
+router.get("/me", authMiddleware, getMyPlots);
+router.get("/", authMiddleware, adminMiddleware, getAllPlots);
 router.get(
-  "/plot/:id",
+  "/:id",
   authMiddleware,
   adminMiddleware,
   getPlotByIdValidation,
   validator,
   getPlotById
 );
-router.post("/plot", createPlotValidation, validator, createPlot);
-router.put("/plot/:id", updatePlotValidation, validator, updatePlot);
-router.delete("/plot/:id", deletePlotValidation, validator, deletePlot);
+router.post("/", createPlotValidation, validator, createPlot);
+router.put("/:id", updatePlotValidation, validator, updatePlot);
+router.delete("/:id", deletePlotValidation, validator, deletePlot);
 
 export default router;

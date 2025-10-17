@@ -41,10 +41,10 @@ app.options(/^\/api\/.*$/, cors(corsOptions));
 app.use(cookieParser());
 
 // Rutas
-app.use("/api/", userRoute);
-app.use("/api/", profileRoute);
+app.use("/api/users", userRoute);
+app.use("/api/profiles", profileRoute);
 app.use("/api", authRoute);
-app.use("/api/", plotRoute);
+app.use("/api/plot", plotRoute);
 
 // ==== Manejador global de errores (siempre JSON) ====
 // Colocalo DESPUÉS de las rutas y ANTES del listen

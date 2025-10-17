@@ -8,28 +8,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_BASE = 'http://localhost:3000/api'; // Cambia el puerto/host si tu backend usa otro
 
     async function authenticateUser(username, password) {
-        try {
-            const response = await fetch(`${API_BASE}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // credentials: 'include', // Descomenta si tu backend usa cookies y CORS
-                body: JSON.stringify({ username, password }),
-            });
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // necesario para que el navegador guarde la cookie httpOnly desde el backend
+                    body: JSON.stringify({ username, password }),
+                });
 
-            const data = await response.json();
+                // Intentar parsear JSON de manera segura
+                let data = {};
+                try { data = await response.json(); } catch(e) { /* respuesta no JSON */ }
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Error de autenticación');
+                if (!response.ok) {
+                    const msg = data?.message || `Error de autenticación (${response.status})`;
+                    throw new Error(msg);
+                }
+
+                // Guardar token en localStorage como fallback para entornos donde la cookie no se persiste
+                if (data?.token) {
+                    try { localStorage.setItem('token', data.token); } catch(e) { /* ignore */ }
+                }
+                return { success: true, message: data.message || 'Login correcto' };
+
+            } catch (error) {
+                console.error('Error durante la autenticación:', error);
+                return { success: false, message: error.message };
             }
-
-            return { success: true, message: data.message };
-
-        } catch (error) {
-            console.error('Error durante la autenticación:', error);
-            return { success: false, message: error.message };
-        }
     }
 
     loginForm.addEventListener('submit', async (event) => {
@@ -55,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             
             setTimeout(() => {
-                window.location.href = '/dashboard.html'; 
+                window.location.href = './index.html'; 
             }, 1500);
 
         } else {

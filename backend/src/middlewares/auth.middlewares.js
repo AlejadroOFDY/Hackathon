@@ -6,8 +6,16 @@ import { UserModel } from "../models/user.model.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {
-    // Sacamos las cookies de la request y será parseado (decodificado) por cookie-parser
-    const token = req.cookies.token;
+    // Sacamos el token preferentemente de las cookies (httpOnly)
+    // Si no está disponible (p. ej. CORS/cookie bloqueada), aceptamos también
+    // el header Authorization: Bearer <token> como fallback (útil para dev)
+    let token = req.cookies?.token;
+    if (!token) {
+      const authHeader = req.headers.authorization || req.headers.Authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+      }
+    }
     if (!token) {
       return res
         .status(401)
