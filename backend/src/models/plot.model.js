@@ -9,9 +9,17 @@ export const PlotModel = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    location: {
-      type: DataTypes.STRING(255), // Address or coordinates
-      allowNull: false,
+    establishmentLocation: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    establishmentLat: {
+      type: DataTypes.DECIMAL(10, 7),
+      allowNull: true,
+    },
+    establishmentLng: {
+      type: DataTypes.DECIMAL(10, 7),
+      allowNull: true,
     },
     cropType: {
       type: DataTypes.STRING(50),

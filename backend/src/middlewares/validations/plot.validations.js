@@ -19,23 +19,20 @@ export const createPlotValidation = [
     .notEmpty()
     .withMessage("Name is required")
     .isLength({ max: 100 }),
-  body("location")
+  body("establishmentLocation")
     .notEmpty()
     .withMessage("Location is required")
-    .custom((value) => {
-      if (
-        !value ||
-        value.type !== "Point" ||
-        !Array.isArray(value.coordinates) ||
-        value.coordinates.length !== 2 ||
-        !value.coordinates.every((coord) => typeof coord === "number")
-      ) {
-        throw new Error(
-          "Location must be a geometry Point with coordinates [lng, lat]"
-        );
-      }
-      return true;
-    }),
+    .isLength({ max: 255 }),
+  body("establishmentLat")
+    .notEmpty()
+    .withMessage("Latitude is required")
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Latitude must be a number between -90 and 90"),
+  body("establishmentLng")
+    .notEmpty()
+    .withMessage("Longitude is required")
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Longitude must be a number between -180 and 180"),
   body("cropType")
     .notEmpty()
     .withMessage("Crop type is required")
@@ -85,22 +82,9 @@ export const updatePlotValidation = [
       }
     }),
   body("name").optional().isLength({ max: 100 }),
-  body("location")
-    .optional()
-    .custom((value) => {
-      if (
-        value &&
-        (value.type !== "Point" ||
-          !Array.isArray(value.coordinates) ||
-          value.coordinates.length !== 2 ||
-          !value.coordinates.every((coord) => typeof coord === "number"))
-      ) {
-        throw new Error(
-          "Location must be a geometry Point with coordinates [lng, lat]"
-        );
-      }
-      return true;
-    }),
+  body("establishmentLocation").optional().isLength({ max: 255 }),
+  body("establishmentLat").optional().isFloat({ min: -90, max: 90 }),
+  body("establishmentLng").optional().isFloat({ min: -180, max: 180 }),
   body("cropType").optional().isLength({ max: 50 }),
   body("area").optional().isFloat({ min: 0.01 }),
   body("ownerId")

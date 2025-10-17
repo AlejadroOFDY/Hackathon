@@ -49,11 +49,13 @@ export const createPlot = async (req, res) => {
   try {
     const {
       name,
-      location,
+      establishmentLocation,
+      establishmentLat,
+      establishmentLng,
       cropType,
       lotCost,
       area,
-      ownerId,
+      user_id,
       status,
       sowingDate,
       expectedHarvestDate,
@@ -62,14 +64,15 @@ export const createPlot = async (req, res) => {
       pests,
       humidity,
     } = req.body;
-    // location debe ser { type: 'Point', coordinates: [lng, lat] }
     const newPlot = await PlotModel.create({
       name,
-      location,
+      establishmentLocation,
+      establishmentLat,
+      establishmentLng,
       cropType,
       lotCost,
       area,
-      ownerId,
+      user_id,
       status,
       sowingDate,
       expectedHarvestDate,
@@ -95,11 +98,13 @@ export const updatePlot = async (req, res) => {
     if (!plot) return res.status(404).json({ message: "Plot not found" });
     const {
       name,
-      location,
+      establishmentLocation,
+      establishmentLat,
+      establishmentLng,
       cropType,
       lotCost,
       area,
-      ownerId,
+      user_id,
       status,
       sowingDate,
       expectedHarvestDate,
@@ -110,11 +115,20 @@ export const updatePlot = async (req, res) => {
     } = req.body;
     await plot.update({
       name: name || plot.name,
-      location: location || plot.location,
+      establishmentLocation:
+        establishmentLocation || plot.establishmentLocation,
+      establishmentLat:
+        establishmentLat !== undefined
+          ? establishmentLat
+          : plot.establishmentLat,
+      establishmentLng:
+        establishmentLng !== undefined
+          ? establishmentLng
+          : plot.establishmentLng,
       cropType: cropType || plot.cropType,
       lotCost: lotCost !== undefined ? lotCost : plot.lotCost,
       area: area || plot.area,
-      ownerId: ownerId || plot.ownerId,
+      user_id: user_id || plot.user_id,
       status: status || plot.status,
       sowingDate: sowingDate || plot.sowingDate,
       expectedHarvestDate: expectedHarvestDate || plot.expectedHarvestDate,
