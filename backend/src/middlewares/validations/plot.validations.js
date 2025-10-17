@@ -41,20 +41,20 @@ export const createPlotValidation = [
     .notEmpty()
     .withMessage("Area is required")
     .isFloat({ min: 0.01 }),
-  body("ownerId")
+  body("user_id")
     .notEmpty()
-    .withMessage("Owner is required")
+    .withMessage("User ID is required")
     .isInt()
-    .withMessage("Owner id must be an integer")
+    .withMessage("User ID must be an integer")
     .custom(async (value) => {
       const user = await UserModel.findByPk(value);
       if (!user || user.deleted) {
-        throw new Error("Owner not found");
+        throw new Error("User not found");
       }
     }),
   body("status")
     .optional()
-    .isIn(["blue", "yellow", "green", "red", "black"])
+    .isIn(["white", "violet", "blue", "yellow", "green", "gray", "red"])
     .withMessage("Invalid status value"),
   body("sowingDate")
     .notEmpty()
@@ -64,7 +64,15 @@ export const createPlotValidation = [
     .notEmpty()
     .withMessage("Expected harvest date is required")
     .isISO8601(),
-  body("actualHarvestDate").optional().isISO8601(),
+  body("actualHarvestDate")
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null || value === undefined || value === "") return true;
+      // Accept null, undefined, or empty string
+      // Otherwise, must be a valid ISO date
+      return !isNaN(Date.parse(value));
+    })
+    .withMessage("Invalid value for actualHarvestDate"),
   body("lotCost").optional().isFloat({ min: 0 }),
   body("damageDescription").optional().isLength({ max: 255 }),
   body("pests").optional().isLength({ max: 255 }),
@@ -87,23 +95,29 @@ export const updatePlotValidation = [
   body("establishmentLng").optional().isFloat({ min: -180, max: 180 }),
   body("cropType").optional().isLength({ max: 50 }),
   body("area").optional().isFloat({ min: 0.01 }),
-  body("ownerId")
+  body("user_id")
     .optional()
     .isInt()
-    .withMessage("Owner id must be an integer")
+    .withMessage("User ID must be an integer")
     .custom(async (value) => {
       const user = await UserModel.findByPk(value);
       if (!user || user.deleted) {
-        throw new Error("Owner not found");
+        throw new Error("User not found");
       }
     }),
   body("status")
     .optional()
-    .isIn(["blue", "yellow", "green", "red", "black"])
+    .isIn(["white", "violet", "blue", "yellow", "green", "gray", "red"])
     .withMessage("Invalid status value"),
   body("sowingDate").optional().isISO8601(),
   body("expectedHarvestDate").optional().isISO8601(),
-  body("actualHarvestDate").optional().isISO8601(),
+  body("actualHarvestDate")
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null || value === undefined || value === "") return true;
+      return !isNaN(Date.parse(value));
+    })
+    .withMessage("Invalid value for actualHarvestDate"),
   body("lotCost").optional().isFloat({ min: 0 }),
   body("damageDescription").optional().isLength({ max: 255 }),
   body("pests").optional().isLength({ max: 255 }),

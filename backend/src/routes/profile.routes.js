@@ -18,9 +18,9 @@ import { validator } from "../middlewares/validator.js";
 
 export const router = Router();
 
-router.get("/", authMiddleware, adminMiddleware, getAllProfiles);
+router.get("/profile", authMiddleware, adminMiddleware, getAllProfiles);
 router.get(
-  "/:id",
+  "/profile/:id",
   authMiddleware,
   adminMiddleware,
   getProfileByIdValidation,
@@ -28,21 +28,21 @@ router.get(
   getProfileById
 );
 router.post(
-  "/",
+  "/profile",
   authMiddleware,
   createProfileValidation,
   validator,
   createProfile
 );
 router.put(
-  "/:id",
+  "/profile/:id",
   authMiddleware,
   updateProfileValidation,
   validator,
   updateProfile
 );
 router.delete(
-  "/:id",
+  "/profile/:id",
   authMiddleware,
   deleteProfileValidation,
   validator,

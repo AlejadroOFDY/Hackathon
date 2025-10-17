@@ -18,19 +18,25 @@ import { validator } from "../middlewares/validator.js";
 
 export const router = Router();
 
-router.get("/", authMiddleware, adminMiddleware, getAllUsers);
+router.get("/user", authMiddleware, adminMiddleware, getAllUsers);
 router.get(
-  "/:id",
+  "/user/:id",
   authMiddleware,
   adminMiddleware,
   getUserByIdValidation,
   validator,
   getUserById
 );
-router.post("/", createUserValidation, validator, createUser);
-router.put("/:id", authMiddleware, updateUserValidation, validator, updateUser);
+router.post("/user", createUserValidation, validator, createUser);
+router.put(
+  "/user/:id",
+  authMiddleware,
+  updateUserValidation,
+  validator,
+  updateUser
+);
 router.delete(
-  "/:id",
+  "/user/:id",
   authMiddleware,
   deleteUserValidation,
   validator,
