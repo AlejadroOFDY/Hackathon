@@ -84,7 +84,7 @@ input[type="password"] {
 
 /* Estilo para los enlaces dentro de las opciones */
 .form-options a {
-    color: #007bff;      /* Color azul para el enlace */
+    color: #28a745;      /* Color verde para el enlace (coincide con la paleta) */
     text-decoration: none; /* Sin subrayado */
 }
 
@@ -105,12 +105,12 @@ input[type="password"] {
 
 /* Estilo específico para el botón principal (Login) */
 .btn-primary {
-    background-color: #007bff; /* Color azul */
+    background-color: #28a745; /* Color verde acorde al index */
 }
 
 /* Efecto al pasar el mouse sobre el botón principal */
 .btn-primary:hover {
-    background-color: #0056b3; /* Azul más oscuro */
+    background-color: #1e7e34; /* Verde más oscuro */
 }
 
 /* Estilo para el enlace de "Sign up" */
@@ -122,7 +122,7 @@ input[type="password"] {
 
 /* Color del texto del enlace "Sign up" */
 .signup-link a {
-    color: #007bff;      /* Color azul */
+    color: #28a745;      /* Color verde */
     text-decoration: none; /* Sin subrayado */
 }
 

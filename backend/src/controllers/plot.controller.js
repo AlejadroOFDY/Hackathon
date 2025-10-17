@@ -63,6 +63,10 @@ export const getMyPlots = async (req, res) => {
 // Create plot
 export const createPlot = async (req, res) => {
   try {
+    // Ensure the plot is always associated with the authenticated user
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
     const {
       name,
       establishmentLocation,
@@ -71,7 +75,6 @@ export const createPlot = async (req, res) => {
       cropType,
       lotCost,
       area,
-      user_id,
       status,
       sowingDate,
       expectedHarvestDate,
@@ -80,6 +83,7 @@ export const createPlot = async (req, res) => {
       pests,
       humidity,
     } = req.body;
+
     const newPlot = await PlotModel.create({
       name,
       establishmentLocation,
@@ -88,7 +92,7 @@ export const createPlot = async (req, res) => {
       cropType,
       lotCost,
       area,
-      user_id,
+      user_id: userId,
       status,
       sowingDate,
       expectedHarvestDate,
@@ -112,6 +116,13 @@ export const updatePlot = async (req, res) => {
       where: { id: req.params.id, deleted: false },
     });
     if (!plot) return res.status(404).json({ message: "Plot not found" });
+    // Only the owner or admin can update the plot
+    const requesterId = req.user?.id;
+    const requesterRole = req.user?.role;
+    if (!requesterId) return res.status(401).json({ message: 'Unauthorized' });
+    if (plot.user_id !== requesterId && requesterRole !== 'admin') {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
     const {
       name,
       establishmentLocation,
@@ -120,7 +131,7 @@ export const updatePlot = async (req, res) => {
       cropType,
       lotCost,
       area,
-      user_id,
+      // ignore user_id from client
       status,
       sowingDate,
       expectedHarvestDate,
@@ -144,8 +155,9 @@ export const updatePlot = async (req, res) => {
       cropType: cropType || plot.cropType,
       lotCost: lotCost !== undefined ? lotCost : plot.lotCost,
       area: area || plot.area,
-      user_id: user_id || plot.user_id,
-      status: status || plot.status,
+    // do not allow changing ownership through this endpoint
+    user_id: plot.user_id,
+    status: status || plot.status,
       sowingDate: sowingDate || plot.sowingDate,
       expectedHarvestDate: expectedHarvestDate || plot.expectedHarvestDate,
       actualHarvestDate: actualHarvestDate || plot.actualHarvestDate,
@@ -168,6 +180,13 @@ export const deletePlot = async (req, res) => {
       where: { id: req.params.id, deleted: false },
     });
     if (!plot) return res.status(404).json({ message: "Plot not found" });
+    // Only the owner or admin can delete the plot
+    const requesterId = req.user?.id;
+    const requesterRole = req.user?.role;
+    if (!requesterId) return res.status(401).json({ message: 'Unauthorized' });
+    if (plot.user_id !== requesterId && requesterRole !== 'admin') {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
     await plot.update({ deleted: true });
     return res.status(200).json({ message: "Plot deleted successfully" });
   } catch (error) {

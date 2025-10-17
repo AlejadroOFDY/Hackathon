@@ -20,8 +20,7 @@ export const createPlotValidation = [
     .withMessage("Name is required")
     .isLength({ max: 100 }),
   body("establishmentLocation")
-    .notEmpty()
-    .withMessage("Location is required")
+    .optional()
     .isLength({ max: 255 }),
   body("establishmentLat")
     .notEmpty()
@@ -41,17 +40,7 @@ export const createPlotValidation = [
     .notEmpty()
     .withMessage("Area is required")
     .isFloat({ min: 0.01 }),
-  body("user_id")
-    .notEmpty()
-    .withMessage("User ID is required")
-    .isInt()
-    .withMessage("User ID must be an integer")
-    .custom(async (value) => {
-      const user = await UserModel.findByPk(value);
-      if (!user || user.deleted) {
-        throw new Error("User not found");
-      }
-    }),
+  // user_id is enforced server-side from the authenticated token; client should not send it
   body("status")
     .optional()
     .isIn(["white", "violet", "blue", "yellow", "green", "gray", "red"])

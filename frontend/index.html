@@ -7,6 +7,8 @@
 		<!-- Bootstrap CSS CDN -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="assets/css/styles.css">
+	<!-- Leaflet CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -25,23 +27,117 @@
 					</ul>
 				</div>
 			</div>
+
+				<!-- Modal para crear nueva parcela -->
+				<div class="modal fade" id="createPlotModal" tabindex="-1" aria-labelledby="createPlotModalLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-lg modal-dialog-centered">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="createPlotModalLabel">Crear nueva parcela</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        <form id="createPlotForm">
+				          <div class="row g-2">
+										<div class="col-md-6">
+											<label class="form-label">Nombre</label>
+											<input id="plotName" name="name" class="form-control" required placeholder="Ej: Parcelas La Esperanza" />
+											<div class="form-text">Nombre identificador para tu parcela (p. ej. nombre de campo o lote).</div>
+										</div>
+										<div class="col-md-6">
+											<label class="form-label">Tipo de cultivo</label>
+											<input id="plotCrop" name="cropType" class="form-control" placeholder="Ej: Maíz, Soja, Algodón" />
+											<div class="form-text">Describe el cultivo principal de la parcela.</div>
+										</div>
+										<div class="col-md-4">
+											<label class="form-label">Área (m²)</label>
+											<input id="plotArea" name="area" type="number" class="form-control" placeholder="Opcional: 1000" />
+											<div class="form-text">Puedes indicar el área estimada en metros cuadrados (opcional).</div>
+										</div>
+										<div class="col-md-4">
+											<label class="form-label">Costo lote</label>
+											<input id="plotCost" name="lotCost" type="number" class="form-control" placeholder="Opcional: 25000" />
+											<div class="form-text">Costo asociado al lote (moneda local). Opcional.</div>
+										</div>
+										<div class="col-md-4">
+											<label class="form-label">Estado inicial</label>
+											<select id="plotStatus" name="status" class="form-select">
+				                <option value="white">Sin sembrar</option>
+				                <option value="violet">Sembrado</option>
+				                <option value="blue">En crecimiento</option>
+				                <option value="yellow">Falta madurar</option>
+				                <option value="green">Listo para cosechar</option>
+				                <option value="gray">Cosechado</option>
+				                <option value="red">Dañado</option>
+				              </select>
+				            </div>
+				          </div>
+						<div class="row g-2 mt-3">
+							<div class="col-md-12">
+								<label class="form-label">Ubicación</label>
+								<input id="plotLocation" name="establishmentLocation" class="form-control" placeholder="Dirección o referencia (opcional)" />
+								<div class="form-text">Descripción libre de la ubicación (opcional).</div>
+							</div>
+						</div>
+				          <div class="row g-2 mt-3">
+				            <div class="col-md-6">
+				              <label class="form-label">Latitud (centro)</label>
+											<input id="plotLat" name="establishmentLat" class="form-control" readonly placeholder="Se rellenará automáticamente" />
+											<div class="form-text">Coordenada Latitud del centro del área seleccionada (autorrelleno).</div>
+				            </div>
+				            <div class="col-md-6">
+				              <label class="form-label">Longitud (centro)</label>
+											<input id="plotLng" name="establishmentLng" class="form-control" readonly placeholder="Se rellenará automáticamente" />
+											<div class="form-text">Coordenada Longitud del centro del área seleccionada (autorrelleno).</div>
+				            </div>
+				          </div>
+						<div class="row g-2 mt-3">
+							<div class="col-md-6">
+								<label class="form-label">Fecha de siembra</label>
+								<input id="plotSowing" name="sowingDate" type="date" class="form-control" required />
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Fecha estimada de cosecha</label>
+								<input id="plotExpected" name="expectedHarvestDate" type="date" class="form-control" required />
+							</div>
+						</div>
+									<input type="hidden" id="plotBounds" name="bounds" />
+									<div class="form-text text-muted mt-2">Al soltar el rectángulo se capturarán las coordenadas y el centro; puedes ajustarlas si es necesario.</div>
+				        </form>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				        <button id="savePlotBtn" type="button" class="btn btn-success">Crear parcela</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 		</nav>
 		<div class="container-fluid min-vh-100 d-flex align-items-stretch p-0">
 			<div class="row g-0 flex-fill w-100">
-				<!-- Left column: espacio decorativo o información breve -->
-				<aside class="col-md-6 d-none d-md-flex align-items-center justify-content-center left-pane">
-					<div class="text-center text-white px-4">
-						<h1 class="display-6 fw-bold">Bienvenido</h1>
-						<p class="lead">Aquí puedes ver y administrar tus parcelas.</p>
-						<p class="small">Usa el panel derecho para revisar tus parcelas registradas.</p>
-					</div>
-				</aside>
+				<!-- Left column: mapa (solo si usuario autenticado) -->
+					<aside class="col-md-6 d-none d-md-flex align-items-stretch justify-content-center left-pane">
+						<div id="mapContainer" class="w-100 h-100 d-flex">
+							<!-- El div del mapa se inyecta y muestra solo cuando el usuario está autenticado -->
+							<div id="map" style="width:100%; height:100%; display:block;"></div>
+							<div id="mapPlaceholder" class="text-center text-white px-4 d-flex align-items-center justify-content-center" style="display:none;">
+								<div>
+									<h1 class="display-6 fw-bold">Bienvenido</h1>
+									<p class="lead">Aquí puedes ver y administrar tus parcelas.</p>
+									<p class="small">Inicia sesión para mostrar el mapa interactivo.</p>
+								</div>
+							</div>
+						</div>
+					</aside>
 
 				<!-- Right column: lista de parcelas del usuario -->
 				<main class="col-12 col-md-6 right-pane p-4">
 					<div class="d-flex justify-content-between align-items-center mb-3">
 						<h2 class="mb-0 d-none">Mis Parcelas</h2>
-						<button id="refreshBtn" class="btn btn-success btn-sm">Refrescar</button>
+						<div class="d-flex gap-2">
+							<button id="drawParcelBtn" class="btn btn-outline-green btn-sm d-none">Dibujar parcela</button>
+							<button id="refreshBtn" class="btn btn-success btn-sm">Refrescar</button>
+						</div>
 					</div>
 
 								<div id="plotContainer" class="plot-container">
@@ -57,6 +153,9 @@
 
 		<!-- Bootstrap JS -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Leaflet JS -->
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+		<!-- App JS (after Leaflet) -->
 		<script src="assets/js/index.js"></script>
     
 					<!-- Modal para ver detalles de parcela (más compacto) -->
@@ -74,7 +173,6 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-								<button id="editFromModal" type="button" class="btn btn-success">Editar</button>
 							</div>
 						</div>
 					</div>

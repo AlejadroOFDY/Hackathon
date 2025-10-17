@@ -87,7 +87,7 @@ h2 {
 
 /* Efecto al pasar el mouse sobre una opción de avatar */
 .avatar-option:hover {
-    border-color: #007bff;
+    border-color: #28a745;
 }
 
 /* Estilo para el avatar que está seleccionado */
@@ -145,7 +145,7 @@ input[type="password"] {
 
 /* Efecto al pasar el mouse sobre el botón de registro */
 .btn-success:hover {
-    background-color: #218838;
+    background-color: #1e7e34;
 }
 
 /* Botón secundario ("Elige tu Avatar") */
@@ -171,7 +171,7 @@ input[type="password"] {
 
 /* Color del texto del enlace "Sign In" */
 .login-link a {
-    color: #007bff;
+    color: #28a745;
     text-decoration: none;
 }
 

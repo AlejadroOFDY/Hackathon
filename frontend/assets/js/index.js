@@ -7,6 +7,9 @@ const API_BASE = 'http://localhost:3000/api';
 let plotList = [];
 // Usuario actual (si autenticado)
 let currentUser = null;
+// Leaflet map instance and markers
+let map = null;
+let markerGroup = null;
 
 async function fetchPlotList(){
   try{
@@ -24,6 +27,8 @@ async function fetchPlotList(){
     // Si la ruta devuelve un array directamente o un objeto
     plotList = Array.isArray(data) ? data : (data.plots || data);
     renderPlotList(plotList);
+    // Si el mapa ya está inicializado, actualizar marcadores
+    if (map) renderPlotMarkers(plotList);
   }catch(err){
     console.error('fetchPlots error', err);
     // Mantener UI vacía
@@ -37,15 +42,8 @@ function createPlotCard(plot){
   card.className = 'plot-card';
   card.innerHTML = `
     <div class="title">${escapeHtml(plot.name)}</div>
-    <div class="meta">Área: <strong>${escapeHtml(plot.area)}</strong></div>
-    <div class="meta">Cultivo: <strong>${escapeHtml(plot.crop)}</strong></div>
-    <div class="badge-area">
-      <span class="plot-badge">ID: ${plot.id}</span>
-      <span class="plot-status-badge" data-id="${plot.id}">${mapStatusToLabel(plot.status)}</span>
-    </div>
     <div class="plot-actions">
       <button class="btn btn-sm btn-outline-green btn-view" data-id="${plot.id}">Ver</button>
-      <button class="btn btn-sm btn-outline-secondary">Editar</button>
     </div>
   `;
   return card;
@@ -76,14 +74,6 @@ function escapeHtml(unsafe){
   });
 }
 
-// Hook del botón refrescar — en producción podría volver a fetch
-document.getElementById('refreshBtn').addEventListener('click', async ()=>{
-  await fetchPlotList();
-});
-
-// Render inicial: obtener lista de parcelas del backend
-fetchPlotList();
-
 // Comprobar sesión del usuario y actualizar UI
 async function checkSession(){
   try{
@@ -102,6 +92,31 @@ async function checkSession(){
   }
 }
 
+// --- Initialization: wait for DOM content to be ready ---
+document.addEventListener('DOMContentLoaded', ()=>{
+  try{
+    // Hook del botón refrescar — en producción podría volver a fetch
+    const refreshBtn = document.getElementById('refreshBtn');
+    if(refreshBtn) refreshBtn.addEventListener('click', async ()=>{ await fetchPlotList(); });
+
+    // Inicializar modales y botones que dependen del DOM
+    const modalEl = document.getElementById('plotModal');
+    if(modalEl) plotModalInstance = new bootstrap.Modal(modalEl);
+    const statusEl = document.getElementById('statusModal');
+    if(statusEl) statusModalInstance = new bootstrap.Modal(statusEl);
+    renderStatusOptions();
+
+    // Hacer chequeo de sesión y cargar parcelas
+    checkSession();
+    // También lanzar una primera carga de parcelas por si ya hay token
+    fetchPlotList();
+    // Inicializar mapa inmediatamente (no requiere sesión)
+    try{ initMap(); } catch(e){ console.error('initMap failed', e); }
+  }catch(e){
+    console.error('Initialization error in index.js', e);
+  }
+});
+
 function updateNavbarForAuth(user){
   const nav = document.querySelector('.navbar-nav');
   if(!nav) return;
@@ -111,6 +126,8 @@ function updateNavbarForAuth(user){
   `;
   const title = document.querySelector('main .d-flex h2');
   if(title) title.classList.remove('d-none');
+  // Mostrar mapa (si existe placeholder) y inicializar si es necesario
+  // No condicionamos la visualización del mapa a la sesión aquí.
   const logoutBtn = document.getElementById('logoutBtn');
   if(logoutBtn) logoutBtn.addEventListener('click', async ()=>{
     const token = localStorage.getItem('token');
@@ -121,6 +138,10 @@ function updateNavbarForAuth(user){
     updateNavbarForUnauth();
     renderPlotList([]);
   });
+
+  // Mostrar botón de dibujar parcela
+  const drawBtn = document.getElementById('drawParcelBtn');
+  if(drawBtn){ drawBtn.classList.remove('d-none'); drawBtn.addEventListener('click', ()=> enableDrawMode()); }
 }
 
 function updateNavbarForUnauth(){
@@ -132,19 +153,15 @@ function updateNavbarForUnauth(){
   `;
   const title = document.querySelector('main .d-flex h2');
   if(title) title.classList.add('d-none');
+  // Hide draw button when user is not authenticated
+  const drawBtn = document.getElementById('drawParcelBtn');
+  if(drawBtn) drawBtn.classList.add('d-none');
+  // Do not hide the map when user is unauthenticated.
 }
-
-// Ejecutar check de sesión al cargar
-checkSession();
 
 // ---------- Modal handling ----------
 // Inicializar instancia del modal (Bootstrap 5)
 let plotModalInstance;
-document.addEventListener('DOMContentLoaded', ()=>{
-  const modalEl = document.getElementById('plotModal');
-  if(modalEl) plotModalInstance = new bootstrap.Modal(modalEl);
-  attachViewButtons();
-});
 
 // Instancia para el modal de estado
 let statusModalInstance;
@@ -259,6 +276,129 @@ function openStatusModalForPlot(plot){
   currentPlotForStatus = plot;
   if(statusModalInstance) statusModalInstance.show();
 }
+
+// ---------- Leaflet map helpers ----------
+function initMap(){
+  if(typeof L === 'undefined'){
+    console.warn('Leaflet no está cargado');
+    return;
+  }
+  // Crear el mapa centrado inicialmente en Formosa, Argentina (más específico)
+  // Coordenadas aproximadas: lat -26.1845, lng -58.1781
+  map = L.map('map', { zoomControl: true }).setView([-26.1845, -58.1781], 12);
+  // Tile layer (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  markerGroup = L.featureGroup().addTo(map);
+  // Si ya hay plots cargados, renderizarlos
+  if(plotList && plotList.length) renderPlotMarkers(plotList);
+}
+
+function renderPlotMarkers(plots){
+  if(!map || !markerGroup) return;
+  markerGroup.clearLayers();
+  const bounds = [];
+  plots.forEach(p => {
+    const lat = p.establishmentLat ?? p.latitude ?? null;
+    const lng = p.establishmentLng ?? p.longitude ?? null;
+    if(lat != null && lng != null){
+      const marker = L.marker([Number(lat), Number(lng)]).bindPopup(`<strong>${escapeHtml(p.name)}</strong><br/>${escapeHtml(p.location || '')}`);
+      markerGroup.addLayer(marker);
+      bounds.push([Number(lat), Number(lng)]);
+    }
+  });
+  if(bounds.length) map.fitBounds(bounds, { padding: [50,50] });
+}
+
+// ---------- Draw rectangle to create parcel ----------
+let drawMode = false;
+let drawStartLatLng = null;
+let drawRectLayer = null;
+
+function enableDrawMode(){
+  if(!map) return alert('Mapa no inicializado');
+  drawMode = true;
+  map.getContainer().style.cursor = 'crosshair';
+  map.on('mousedown', onMapMouseDownForDraw);
+  alert('Modo dibujo activado: arrastra para crear un rectángulo.');
+}
+
+function disableDrawMode(){
+  drawMode = false;
+  map.getContainer().style.cursor = '';
+  map.off('mousedown', onMapMouseDownForDraw);
+  map.off('mousemove', onMapMouseMoveForDraw);
+  map.off('mouseup', onMapMouseUpForDraw);
+}
+
+function onMapMouseDownForDraw(e){
+  drawStartLatLng = e.latlng;
+  map.on('mousemove', onMapMouseMoveForDraw);
+  map.on('mouseup', onMapMouseUpForDraw);
+}
+
+function onMapMouseMoveForDraw(e){
+  if(!drawStartLatLng) return;
+  const bounds = L.latLngBounds(drawStartLatLng, e.latlng);
+  if(drawRectLayer) markerGroup.removeLayer(drawRectLayer);
+  drawRectLayer = L.rectangle(bounds, { color: '#28a745', weight: 1, dashArray: '4' }).addTo(markerGroup);
+}
+
+function onMapMouseUpForDraw(e){
+  map.off('mousemove', onMapMouseMoveForDraw);
+  map.off('mouseup', onMapMouseUpForDraw);
+  const bounds = L.latLngBounds(drawStartLatLng, e.latlng);
+  // Show modal with center coords and bounds
+  const center = bounds.getCenter();
+  document.getElementById('plotLat').value = center.lat.toFixed(6);
+  document.getElementById('plotLng').value = center.lng.toFixed(6);
+  document.getElementById('plotBounds').value = JSON.stringify(bounds.toBBoxString());
+  // Show modal
+  const createModalEl = document.getElementById('createPlotModal');
+  const createModal = new bootstrap.Modal(createModalEl);
+  createModal.show();
+  // disable draw mode
+  disableDrawMode();
+}
+
+// Handler for save plot button
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saveBtn = document.getElementById('savePlotBtn');
+  if(saveBtn) saveBtn.addEventListener('click', async ()=>{
+    const form = document.getElementById('createPlotForm');
+    const formData = new FormData(form);
+    const body = Object.fromEntries(formData.entries());
+    // Bounds comes as a bbox string "southWest_lng,southWest_lat,northEast_lng,northEast_lat" or similar; backend can parse if needed
+    // Attach user id if available
+      // Ensure we DO NOT send user_id from the client. The server will assign the authenticated user.
+      delete body.user_id;
+      // Convert numeric fields
+      if(body.area) body.area = Number(body.area);
+      if(body.lotCost) body.lotCost = Number(body.lotCost);
+      try{
+        const token = localStorage.getItem('token');
+        const headers = { 'Content-Type': 'application/json' };
+        if(token) headers['Authorization'] = 'Bearer ' + token;
+        // Use HTTP PUT to create resource per requirement
+        const res = await fetch(`${API_BASE}/plot`, { method: 'PUT', headers, credentials: 'include', body: JSON.stringify(body) });
+      if(!res.ok) throw new Error('Error creando parcela ' + res.status);
+      const created = await res.json();
+      // Close modal
+      const createModalEl = document.getElementById('createPlotModal');
+      const createModal = bootstrap.Modal.getInstance(createModalEl);
+      if(createModal) createModal.hide();
+      // Refresh
+      await fetchPlotList();
+        if(drawRectLayer) { markerGroup.removeLayer(drawRectLayer); drawRectLayer = null; }
+      alert('Parcela creada');
+    }catch(err){
+      console.error('No se pudo crear parcela', err);
+      alert('No se pudo crear la parcela. Revisa la consola.');
+    }
+  });
+});
 
 function selectStatus(statusKey){
   if(!currentPlotForStatus) return;

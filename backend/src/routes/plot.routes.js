@@ -29,8 +29,10 @@ router.get(
   validator,
   getPlotById
 );
-router.post("/", createPlotValidation, validator, createPlot);
-router.put("/:id", updatePlotValidation, validator, updatePlot);
-router.delete("/:id", deletePlotValidation, validator, deletePlot);
+router.post("/", authMiddleware, createPlotValidation, validator, createPlot);
+// Allow creation also via PUT / for clients that use PUT to create resources
+router.put("/", authMiddleware, createPlotValidation, validator, createPlot);
+router.put("/:id", authMiddleware, updatePlotValidation, validator, updatePlot);
+router.delete("/:id", authMiddleware, deletePlotValidation, validator, deletePlot);
 
 export default router;
