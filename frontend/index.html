@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestión de Cultivos — Mapa de Parcelas</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Producción y Ambiente · Gestión de Cultivos</h1>
+    <p class="subtitle">Mapa hotspot de parcelas con estados y detalles</p>
+  </header>
+
+  <main class="layout">
+    <!-- COLUMNA IZQUIERDA: MAPA -->
+    <section class="panel map-panel" aria-label="Mapa de parcelas">
+      <div class="map-card">
+        <!-- Leyenda -->
+        <div class="legend" aria-label="Leyenda de estados">
+          <span class="legend-item"><span class="swatch state-white"></span> Sin sembrar</span>
+          <span class="legend-item"><span class="swatch state-violet"></span> Sembrado</span>
+          <span class="legend-item"><span class="swatch state-blue"></span> En crecimiento</span>
+          <span class="legend-item"><span class="swatch state-yellow"></span> Falta madurar</span>
+          <span class="legend-item"><span class="swatch state-green"></span> Listo para cosechar</span>
+          <span class="legend-item"><span class="swatch state-gray"></span> Cosechado</span>
+          <span class="legend-item"><span class="swatch state-red"></span> Dañado</span>
+        </div>
+
+        <!-- SVG Mapa: 12 parcelas (3 columnas x 4 filas) -->
+        <div class="svg-wrap">
+          <svg viewBox="0 0 1000 700" role="img" aria-label="Mapa de parcelas agrícolas">
+            <defs>
+              <!-- Sombra suave -->
+              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.2" />
+              </filter>
+            </defs>
+
+            <!-- Columnas: x = 20, 360, 700 | Filas: y = 20, 180, 340, 500 | tamaño 280x140 -->
+            <!-- Fila 1 -->
+            <a href="#p-01" aria-label="Ver detalles de la parcela P-01">
+              <g class="parcel state-green" transform="translate(20,20)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-01</text>
+              </g>
+            </a>
+            <a href="#p-02" aria-label="Ver detalles de la parcela P-02">
+              <g class="parcel state-yellow" transform="translate(360,20)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-02</text>
+              </g>
+            </a>
+            <a href="#p-03" aria-label="Ver detalles de la parcela P-03">
+              <g class="parcel state-blue" transform="translate(700,20)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-03</text>
+              </g>
+            </a>
+
+            <!-- Fila 2 -->
+            <a href="#p-04" aria-label="Ver detalles de la parcela P-04">
+              <g class="parcel state-violet" transform="translate(20,180)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-04</text>
+              </g>
+            </a>
+            <a href="#p-05" aria-label="Ver detalles de la parcela P-05">
+              <g class="parcel state-white" transform="translate(360,180)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-05</text>
+              </g>
+            </a>
+            <a href="#p-06" aria-label="Ver detalles de la parcela P-06">
+              <g class="parcel state-red" transform="translate(700,180)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-06</text>
+              </g>
+            </a>
+
+            <!-- Fila 3 -->
+            <a href="#p-07" aria-label="Ver detalles de la parcela P-07">
+              <g class="parcel state-gray" transform="translate(20,340)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-07</text>
+              </g>
+            </a>
+            <a href="#p-08" aria-label="Ver detalles de la parcela P-08">
+              <g class="parcel state-green" transform="translate(360,340)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-08</text>
+              </g>
+            </a>
+            <a href="#p-09" aria-label="Ver detalles de la parcela P-09">
+              <g class="parcel state-yellow" transform="translate(700,340)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-09</text>
+              </g>
+            </a>
+
+            <!-- Fila 4 -->
+            <a href="#p-10" aria-label="Ver detalles de la parcela P-10">
+              <g class="parcel state-blue" transform="translate(20,500)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-10</text>
+              </g>
+            </a>
+            <a href="#p-11" aria-label="Ver detalles de la parcela P-11">
+              <g class="parcel state-violet" transform="translate(360,500)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-11</text>
+              </g>
+            </a>
+            <a href="#p-12" aria-label="Ver detalles de la parcela P-12">
+              <g class="parcel state-white" transform="translate(700,500)">
+                <rect width="280" height="140" rx="10" />
+                <text x="140" y="80" class="parcel-label">P-12</text>
+              </g>
+            </a>
+          </svg>
+        </div>
+        <p class="hint">Haz clic en una parcela para ver sus datos.</p>
+      </div>
+    </section>
+
+    <!-- COLUMNA DERECHA: PANEL DE DETALLES -->
+    <aside class="panel details-panel" aria-live="polite">
+      <div class="details-card">
+        <h2>Detalles de la parcela</h2>
+        <p class="details-empty">Selecciona una parcela en el mapa para ver su información.</p>
+
+        <!-- Bloques de detalle. Se muestran con :target -->
+        <section id="p-01" class="detail">
+          <header>
+            <h3>P-01 · Trigo <span class="tag tag-green">Listo para cosechar</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Juan Pérez</dd></div>
+            <div><dt>Hectáreas</dt><dd>14.2 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>15/05/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>18/10/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Sector Norte</dd></div>
+            <div><dt>Notas</dt><dd>Humedad de suelo óptima; priorizar cosecha esta semana.</dd></div>
+          </dl>
+          <a class="close" href="#" aria-label="Cerrar detalles">Cerrar</a>
+        </section>
+
+        <section id="p-02" class="detail">
+          <header>
+            <h3>P-02 · Maíz <span class="tag tag-yellow">Falta madurar</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Agro S.A.</dd></div>
+            <div><dt>Hectáreas</dt><dd>11.0 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>02/06/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>30/10/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Centro Oeste</dd></div>
+            <div><dt>Notas</dt><dd>Aplicar fertilizante N dentro de 5 días.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-03" class="detail">
+          <header>
+            <h3>P-03 · Soja <span class="tag tag-blue">En crecimiento</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Lucía Gómez</dd></div>
+            <div><dt>Hectáreas</dt><dd>9.5 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>22/06/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>20/11/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Sector Este</dd></div>
+            <div><dt>Notas</dt><dd>Control de malezas programado el 25/08.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-04" class="detail">
+          <header>
+            <h3>P-04 · Girasol <span class="tag tag-violet">Sembrado</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Coop. Rural</dd></div>
+            <div><dt>Hectáreas</dt><dd>10.6 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>05/08/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>10/12/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Centro</dd></div>
+            <div><dt>Notas</dt><dd>Monitorear plagas; instalar trampas en borde sur.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-05" class="detail">
+          <header>
+            <h3>P-05 · Trigo <span class="tag tag-white">Sin sembrar</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Agro S.A.</dd></div>
+            <div><dt>Hectáreas</dt><dd>12.0 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>No aplica</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>No aplica</dd></div>
+            <div><dt>Ubicación</dt><dd>Sur Oeste</dd></div>
+            <div><dt>Notas</dt><dd>Listo para preparación del suelo.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-06" class="detail">
+          <header>
+            <h3>P-06 · Papa <span class="tag tag-red">Dañado</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>María Ponce</dd></div>
+            <div><dt>Hectáreas</dt><dd>7.8 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>12/06/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>15/10/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Sur</dd></div>
+            <div><dt>Notas</dt><dd>Daño por granizo; evaluar resiembra parcial.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-07" class="detail">
+          <header>
+            <h3>P-07 · Arroz <span class="tag tag-gray">Cosechado</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Coop. Rural</dd></div>
+            <div><dt>Hectáreas</dt><dd>8.3 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>10/02/2025</dd></div>
+            <div><dt>Fecha de cosecha</dt><dd>28/06/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Oeste</dd></div>
+            <div><dt>Notas</dt><dd>Lote disponible para rotación.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-08" class="detail">
+          <header>
+            <h3>P-08 · Soja <span class="tag tag-green">Listo para cosechar</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Juan Pérez</dd></div>
+            <div><dt>Hectáreas</dt><dd>13.1 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>03/05/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>15/10/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Sector Central</dd></div>
+            <div><dt>Notas</dt><dd>Coordinar maquinaria con P-01.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-09" class="detail">
+          <header>
+            <h3>P-09 · Maíz <span class="tag tag-yellow">Falta madurar</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Agro S.A.</dd></div>
+            <div><dt>Hectáreas</dt><dd>10.0 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>20/06/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>05/11/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Este</dd></div>
+            <div><dt>Notas</dt><dd>Revisar riego por goteo tras ola de calor.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-10" class="detail">
+          <header>
+            <h3>P-10 · Trigo <span class="tag tag-blue">En crecimiento</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Lucía Gómez</dd></div>
+            <div><dt>Hectáreas</dt><dd>9.8 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>28/06/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>22/10/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Sur Este</dd></div>
+            <div><dt>Notas</dt><dd>Nivel de nitrógeno adecuado.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-11" class="detail">
+          <header>
+            <h3>P-11 · Girasol <span class="tag tag-violet">Sembrado</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>María Ponce</dd></div>
+            <div><dt>Hectáreas</dt><dd>12.6 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>08/08/2025</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>12/12/2025</dd></div>
+            <div><dt>Ubicación</dt><dd>Centro</dd></div>
+            <div><dt>Notas</dt><dd>Cubierta vegetal en bordes para control de erosión.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+
+        <section id="p-12" class="detail">
+          <header>
+            <h3>P-12 · Trigo <span class="tag tag-white">Sin sembrar</span></h3>
+          </header>
+          <dl>
+            <div><dt>Dueño</dt><dd>Coop. Rural</dd></div>
+            <div><dt>Hectáreas</dt><dd>10.2 ha</dd></div>
+            <div><dt>Fecha de siembra</dt><dd>No aplica</dd></div>
+            <div><dt>Fecha estimada de cosecha</dt><dd>No aplica</dd></div>
+            <div><dt>Ubicación</dt><dd>Sur</dd></div>
+            <div><dt>Notas</dt><dd>Requiere análisis de suelo previo.</dd></div>
+          </dl>
+          <a class="close" href="#">Cerrar</a>
+        </section>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="app-footer">
+    <p>© 2025 Gestión de Cultivos. <a href="login.html">Iniciar sesión</a> · <a href="register.html">Registrarse</a></p>
+  </footer>
+</body>
+</html>
