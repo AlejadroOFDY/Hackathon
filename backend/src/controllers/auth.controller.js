@@ -4,7 +4,17 @@ import { generateToken } from "../helpers/jwt.helpers.js";
 import { comparePassword, hashPassword } from "../helpers/bcrypt.helpers.js";
 
 export const register = async (req, res) => {
-  const { username, email, password, role, first_name, last_name } = req.body;
+  const {
+    username,
+    email,
+    password,
+    role,
+    first_name,
+    last_name,
+    establishmentLocation,
+    establishmentLat,
+    establishmentLng,
+  } = req.body;
   try {
     const hashedPassword = await hashPassword(password);
 
@@ -30,6 +40,9 @@ export const register = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      establishmentLocation,
+      establishmentLat,
+      establishmentLng,
     });
 
     await ProfileModel.create({
