@@ -1,0 +1,78 @@
+/* Layout base */
+:root{
+  --bg:#0b1120;
+  --panel:#111827;
+  --muted:#94a3b8;
+  --text:#e5e7eb;
+  --border:#1f2937;
+  --white:#ffffff;
+  --violet:#8b5cf6;
+  --blue:#3b82f6;
+  --yellow:#eab308;
+  --green:#22c55e;
+  --gray:#6b7280;
+  --red:#ef4444;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:linear-gradient(180deg,#0b1120 0%,#111827 100%);
+  color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+}
+.app-header{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:1rem 1.25rem; border-bottom:1px solid var(--border); background:rgba(17,24,39,.6); backdrop-filter:blur(8px);
+  position:sticky; top:0; z-index:10;
+}
+.brand{display:flex; align-items:center; gap:.75rem}
+.brand .logo{font-size:1.5rem}
+.brand h1{font-size:1.1rem; margin:0}
+.legend{display:flex; flex-wrap:wrap; gap:.75rem; font-size:.9rem; color:var(--muted)}
+.legend-item{display:inline-flex; align-items:center; gap:.35rem}
+.dot{display:inline-block; width:.75rem; height:.75rem; border-radius:999px; border:2px solid #0003}
+.dot.white{background:var(--white)}
+.dot.violet{background:var(--violet)}
+.dot.blue{background:var(--blue)}
+.dot.yellow{background:var(--yellow)}
+.dot.green{background:var(--green)}
+.dot.gray{background:var(--gray)}
+.dot.red{background:var(--red)}
+
+.layout{display:grid; grid-template-columns:1fr 360px; gap:1rem; padding:1rem; height:calc(100vh - 70px)}
+.map-panel{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:1rem; display:flex}
+.details-panel{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:1rem; display:flex; flex-direction:column}
+.details-header h2{margin:.25rem 0 1rem 0; font-size:1.05rem}
+.details-body{color:#cbd5e1; font-size:.95rem; line-height:1.5}
+.app-footer{padding:.75rem 1rem; color:var(--muted); text-align:center; border-top:1px solid var(--border)}
+
+/* Mapa como grilla hotspot */
+.map-grid{
+  --cols: 16; --rows: 10; --gap:.5rem;
+  display:grid; grid-template-columns:repeat(var(--cols),1fr);
+  grid-template-rows:repeat(var(--rows),1fr); gap:var(--gap); width:100%; height:100%;
+}
+.parcel{
+  position:relative; border-radius:10px; cursor:pointer; border:1px solid #0005;
+  transition:transform .12s ease, box-shadow .12s ease, filter .2s ease;
+  box-shadow:inset 0 1px 0 #fff1, 0 6px 18px #0005;
+}
+.parcel:hover{transform:translateY(-2px); box-shadow:inset 0 1px 0 #fff1, 0 10px 22px #0007}
+.parcel::after{content:attr(data-name); position:absolute; left:8px; bottom:6px; font-weight:600; font-size:.75rem; color:#111827; text-shadow:0 1px 0 #fff6}
+
+/* Colores por estado */
+.parcel.white{background:conic-gradient(from 180deg at 70% 30%, #fff 0 25%, #ddd 0 50%, #f5f5f5 0 100%)}
+.parcel.violet{background:linear-gradient(135deg, #7c3aed, #a78bfa)}
+.parcel.blue{background:linear-gradient(135deg, #2563eb, #60a5fa)}
+.parcel.yellow{background:linear-gradient(135deg, #d97706, #facc15)}
+.parcel.green{background:linear-gradient(135deg, #16a34a, #86efac)}
+.parcel.gray{background:linear-gradient(135deg, #4b5563, #9ca3af)}
+.parcel.red{background:linear-gradient(135deg, #b91c1c, #f87171)}
+
+/* Indicadores en miniatura */
+.parcel .chip{position:absolute; top:6px; right:6px; padding:.15rem .45rem; border-radius:999px; font-size:.7rem; font-weight:700; color:#0b1120; background:#fff9}
+
+/* Responsivo */
+@media (max-width: 1024px){
+  .layout{grid-template-columns:1fr; grid-auto-rows:minmax(0,auto)}
+  .details-panel{height:360px}
+}
